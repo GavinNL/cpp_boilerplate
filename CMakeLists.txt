@@ -179,6 +179,7 @@ if(CPPBOILERPLATE_USE_CONAN)
     #)
 
    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+   set(CONAN_SYSTEM_INCLUDES ON)
    conan_basic_setup()
 
    link_libraries(${CONAN_LIBS})
