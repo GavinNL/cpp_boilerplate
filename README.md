@@ -40,7 +40,7 @@ If you have the [Conan Package Manager](http://conan.io) installed, you can down
 cd $PROJECT_SRC_FOLDER
 mkdir build
 conan install ..
-cmake .. -DCPPBOILERPLATELIB_USE_CONAN:BOOL=true
+cmake .. -DCPPBOILERPLATE_USE_CONAN:BOOL=true
 cmake --build .
 ```
 
@@ -55,7 +55,7 @@ To add a C++ unit test to your project. Simply make a copy one of the sample uni
 Unit tests are automatically compiled by default, but you can turn off compiling of unit testing by adding the following flag to your cmake command
 
 ```
-cmake .. -DCPPBOILERPLATELIB_USE_CONAN:BOOL=TRUE  -DCPPBOILERPLATELIB_BUILD_TESTS:BOOL=FALSE
+cmake .. -DCPPBOILERPLATE_USE_CONAN:BOOL=TRUE  -DCPPBOILERPLATE_BUILD_TESTS:BOOL=FALSE
 ```
 
 ## Code Coverage
@@ -64,7 +64,7 @@ Code Coverage is performed by compiling the library with the Code Coverage flag
 turned on and then executing the unit test. It is therefore necessary to have both flags turned on to perform code coverage analysis of your unit tests.
 
 ```
-cmake .. -DCPPBOILERPLATELIB_USE_CONAN:BOOL=TRUE  -DCPPBOILERPLATELIB_ENABLE_COVERAGE:BOOL=TRUE -DCPPBOILERPLATELIB_BUILD_TESTS:BOOL=FALSE
+cmake .. -DCPPBOILERPLATE_USE_CONAN:BOOL=TRUE  -DCPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -DCPPBOILERPLATE_BUILD_TESTS:BOOL=FALSE
 ```
 
 Travis will automatically upload the code coverage reports to codecov.io. It is currently enabled on a single build instance. You only need to have it execute on one build instance.
