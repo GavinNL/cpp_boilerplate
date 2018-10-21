@@ -14,15 +14,15 @@
 
 cmake_minimum_required(VERSION 3.8)
 
-#CPPBOILERPLATELIB
+#CPPBOILERPLATE
 set (CMAKE_CXX_STANDARD 11)
 
 
 option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
 
-option(CPPBOILERPLATELIB_USE_CONAN "Use Conan to handle dependencies" OFF)
-option(CPPBOILERPLATELIB_ENABLE_COVERAGE "Enable Code Coverage flags" OFF)
-option(CPPBOILERPLATELIB_BUILD_TESTS "Build Tests" ON)
+option(CPPBOILERPLATE_USE_CONAN "Use Conan to handle dependencies" OFF)
+option(CPPBOILERPLATE_ENABLE_COVERAGE "Enable Code Coverage flags" OFF)
+option(CPPBOILERPLATE_BUILD_TESTS "Build Tests" ON)
 
 #########################################################
 FILE(GLOB TEXT_FILES  "*.yml" )
@@ -38,7 +38,7 @@ add_library(project_warnings INTERFACE)
 #########################################################
 # Add the main include folder for our library
 #########################################################
-set(CPPBOILERPLATELIB_INCLUDE ${PROJECT_SOURCE_DIR}/include)
+set(CPPBOILERPLATE_INCLUDE ${PROJECT_SOURCE_DIR}/include)
 #########################################################
 
 
@@ -141,7 +141,7 @@ set(CPPBOILERPLATELIB_INCLUDE ${PROJECT_SOURCE_DIR}/include)
 # conan process and gather all the include paths
 # and libraries required
 #########################################################
-if(CPPBOILERPLATELIB_USE_CONAN)
+if(CPPBOILERPLATE_USE_CONAN)
 
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
       # using Clang
@@ -193,10 +193,10 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 # If we hhave enabled coverage, make sure to add the
 # specific flags required to calculate the coverage
 #########################################################
-if(CPPBOILERPLATELIB_ENABLE_COVERAGE)
+if(CPPBOILERPLATE_ENABLE_COVERAGE)
 
   if(CMAKE_COMPILER_IS_GNUCC)
-    option(CPPBOILERPLATELIB_ENABLE_COVERAGE "Enable coverage reporting for gcc/clang" FALSE)
+    option(CPPBOILERPLATE_ENABLE_COVERAGE "Enable coverage reporting for gcc/clang" FALSE)
 
     add_compile_options(--coverage -g -O0 -fprofile-arcs -ftest-coverage)
   endif()
@@ -312,9 +312,9 @@ ENDMACRO()
 SUBDIRLIST(CPPBOILERPLATE_LIBS ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 
-if(CPPBOILERPLATELIB_ENABLE_COVERAGE)
-    set(CPPBOILERPLATELIB_COVERAGE_FLAGS "--coverage -g -O0 -fprofile-arcs -ftest-coverage")
-    MESSAGE("Setting Coverage flags: ${CPPBOILERPLATELIB_COVERAGE_FLAGS} ")
+if(CPPBOILERPLATE_ENABLE_COVERAGE)
+    set(CPPBOILERPLATE_COVERAGE_FLAGS "--coverage -g -O0 -fprofile-arcs -ftest-coverage")
+    MESSAGE("Setting Coverage flags: ${CPPBOILERPLATE_COVERAGE_FLAGS} ")
 endif()
 
 
@@ -335,7 +335,7 @@ add_subdirectory(src)
 # will be stored. Each unit test will be compiled and
 # linked with all the libraryes in the src/ folder
 #########################################################
-if( ${CPPBOILERPLATELIB_BUILD_TESTS})
+if( ${CPPBOILERPLATE_BUILD_TESTS})
 add_subdirectory(test)
 endif()
 #########################################################
