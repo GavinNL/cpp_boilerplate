@@ -173,15 +173,22 @@ if(CPPBOILERPLATE_USE_CONAN)
     #    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     #)
 
-    #execute_process (
-    #    COMMAND bash -c "conan install ${CMAKE_SOURCE_DIR} --build=missing -s compiler=${CONAN_COMPILER} -s compiler.version=${CXX_COMPILER_VER}"
-    #    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    #)
+    if(EXISTS ${CMAKE_SOURCE_DIR}/conanfile.txt)
+        MESSAGE("=====================================================")
+        MESSAGE(" Conanfile.txt exists. Installing dependencies")
+        MESSAGE("Executing  : conan install ${CMAKE_SOURCE_DIR} --build=missing -s compiler=${CONAN_COMPILER} -s compiler.version=${CXX_COMPILER_VER} ")
+        MESSAGE("Working dir: ${CMAKE_BINARY_DIR}")
+        MESSAGE("=====================================================")
 
-   include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-   set(CONAN_SYSTEM_INCLUDES ON)
-   conan_basic_setup()
+        execute_process (
+            COMMAND bash -c "conan install ${CMAKE_SOURCE_DIR} --build=missing -s compiler=${CONAN_COMPILER} -s compiler.version=${CXX_COMPILER_VER}"
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        )
 
+       include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+       set(CONAN_SYSTEM_INCLUDES ON)
+       conan_basic_setup()
+   endif()
    link_libraries(${CONAN_LIBS})
 endif()
 #########################################################
