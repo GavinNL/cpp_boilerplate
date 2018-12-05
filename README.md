@@ -12,7 +12,36 @@ Dev:
 [![codecov](https://codecov.io/gh/GavinNL/cpp_boilerplate/branch/dev/graph/badge.svg)](https://codecov.io/gh/GavinNL/cpp_boilerplate)
 ![Codacy branch grade](https://img.shields.io/codacy/grade/4fe50de6102e4d678bacdd292c949310/dev.svg)
 
-(Don't forget to update the links for your badges)
+This repo is a boilerplate for your C++ projects.
+
+# Quick Start
+
+1. First clone the repo and get initialize it so that you can start developing
+your own library/application
+
+  ```
+  git clone https://github.com/GavinNL/cpp_boilerplate my_cpp_project
+
+  cd my_cpp_project
+
+  # This renames all occurances of CPPBOILERPLATE in the Cmake files to
+  # MYCPPPROJECT. You should use something unique and all CAPS
+  sh ./rename_library MYCPPPROJECT
+
+  # Optional: delete the git directory so you don't get the history
+  rm -rf .git
+
+  # Re-initialize your git repo
+  git init
+
+  ```
+
+2. Edit (or delete) the `conanfile.txt` file with the dependencies you wish to
+use for your library/application
+
+3. Update the links to the travis-ci/appveyor/codecov badges in the README.md file
+
+4. Start developing your project (See Source Code File Structure)
 
 # Features
  *  Multiple library modules
@@ -21,6 +50,8 @@ Dev:
  *  Continuous Integration with [Travis-CI](https://travis-ci.org) and [Appveyor](https://ci.appveyor.com/)
  *  Code Coverage with gcov and [codecov.io](https://codecov.io)
  *  Code Quality with [codacy](https://app.codacy.com)
+
+
 
 ## Source Code File Structure.
 
