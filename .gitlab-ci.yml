@@ -44,8 +44,8 @@ build-gcc7:
     before_script:
       - sudo apt update
       - sudo apt install gcovr
-    script:
       - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+    script:
       - mkdir -p build && cd build
       - conan install ..
       - cmake -D CPPBOILERPLATE_USE_CONAN:BOOL=TRUE -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE ..
@@ -65,6 +65,7 @@ build-clang6:
     before_script:
       - sudo apt update
       - sudo apt install -y --no-install-recommends gcovr
+      - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
     script:
       - mkdir -p build && cd build
       - conan install -D CPPBOILERPLATE_USE_CONAN:BOOL=TRUE -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE  ..
