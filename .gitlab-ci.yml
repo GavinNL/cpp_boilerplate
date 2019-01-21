@@ -59,20 +59,20 @@ build-gcc7:
 #        - build/coverage/
 #        - build/test/Testing/Temporary/
 
-# build-clang6:
-#     image: lasote/conanclang60
-#     stage: test
-#     before_script:
-#       - sudo apt update
-#       - sudo apt install -y --no-install-recommends gcovr
-#     script:
-#       - mkdir -p build && cd build
-#       - conan install ..
-#       - cmake ..
-#       - cmake --build .
-#       - cmake --build . --target test
-#       - cmake --build . --target memcheck
-#       - cmake --build . --target coverage
+build-clang6:
+    image: lasote/conanclang60
+    stage: test
+    before_script:
+      - sudo apt update
+      - sudo apt install -y --no-install-recommends gcovr
+    script:
+      - mkdir -p build && cd build
+      - conan install -D CPPBOILERPLATE_USE_CONAN:BOOL=TRUE -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE  ..
+      - cmake ..
+      - cmake --build .
+      - cmake --build . --target test
+      - cmake --build . --target memcheck
+      - cmake --build . --target coverage
 
 #deploy-bintray:
 #    image: lasote/conangcc7
