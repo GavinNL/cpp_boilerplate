@@ -48,7 +48,7 @@ build-gcc7:
       - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
       - mkdir -p build && cd build
       - conan install ..
-      - cmake .. -D CPPBOILERPLATE_USE_CONAN:BOOL=TRUE -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE
+      - cmake -D CPPBOILERPLATE_USE_CONAN:BOOL=TRUE -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE ..
       - cmake --build .
 #      - cmake --build . --target test
 #      - cmake --build . --target memcheck
