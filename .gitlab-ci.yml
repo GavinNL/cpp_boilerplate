@@ -47,7 +47,7 @@ build-gcc7:
       - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
     script:
       - mkdir -p build && cd build
-      - conan install ..
+      - conan install --build missing ..
       - cmake -D CPPBOILERPLATE_USE_CONAN:BOOL=TRUE -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE ..
       - cmake --build .
 #      - cmake --build . --target test
@@ -68,12 +68,13 @@ build-clang6:
       - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
     script:
       - mkdir -p build && cd build
-      - conan install   ..
+      - conan install --build missing ..
       - cmake -D CPPBOILERPLATE_USE_CONAN:BOOL=TRUE -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE ..
       - cmake --build .
-      - cmake --build . --target test
-      - cmake --build . --target memcheck
-      - cmake --build . --target coverage
+      - ctest
+#      - cmake --build . --target test
+#      - cmake --build . --target memcheck
+#      - cmake --build . --target coverage
 
 #deploy-bintray:
 #    image: lasote/conangcc7
