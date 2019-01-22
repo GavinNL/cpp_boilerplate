@@ -18,7 +18,7 @@ cppcheck:
     - cppcheck-htmlreport --source-encoding="iso8859-1" --title="my project name" --source-dir . --report-dir=cppcheck --file=cppcheck/result.xml
   artifacts:
     paths:
-      - build/coverage/
+      - cppcheck/
 
 # clang-tidy:
 #   image: base/archlinux:2018.09.01
