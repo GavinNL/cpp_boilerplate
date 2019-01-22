@@ -1,6 +1,7 @@
 stages:
+- analysis
 - test
-#  - analysis
+
 #  - deploy
 
 cppcheck:
