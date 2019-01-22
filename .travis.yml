@@ -27,6 +27,7 @@ matrix:
          - COMPILER="CC=gcc-5 && CXX=g++-5"
       before_install: eval "${COMPILER}"
       script: make travis
+
     - os: linux
       addons:
         apt:
@@ -39,6 +40,7 @@ matrix:
          - COMPILER="CC=gcc-7 && CXX=g++-7"
       before_install: eval "${COMPILER}"
       script: make travis
+
     - os: linux
       compiler: clang
       script: make travis
@@ -56,6 +58,9 @@ matrix:
     - os: windows
       install: choco install conan
       script:
+        - refreshevn
+        - conan user
+        - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
         - mkdir build && cd build
         - conan install --build missing ..
         - cmake ..
