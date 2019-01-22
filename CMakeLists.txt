@@ -14,6 +14,8 @@
 
 cmake_minimum_required(VERSION 3.8)
 
+project(CPP_BOILERPLATE)
+
 #CPPBOILERPLATE
 set (CMAKE_CXX_STANDARD 11)
 
@@ -141,58 +143,68 @@ set(CPPBOILERPLATE_INCLUDE ${PROJECT_SOURCE_DIR}/include)
 # conan process and gather all the include paths
 # and libraries required
 #########################################################
-if(CPPBOILERPLATE_USE_CONAN)
-
-    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-      # using Clang
-      set(CONAN_COMPILER clang)
-    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-      # using GCC
-      set(CONAN_COMPILER gcc)
-    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
-      # using Intel C++
-    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-      # using Visual Studio C++
-      set(CONAN_COMPILER "Visual Studio")
-    endif()
-
-
-    STRING_SPLIT( XX "." "${CMAKE_CXX_COMPILER_VERSION}" )
-    set (MY_LIST a b c d)
-    list (GET XX 0 MAJOR)
-    list (GET XX 1 MINOR)
-    #message ("HEAD = ${HEAD}")
-    set(CXX_COMPILER_VER ${MAJOR}.${MINOR} )
-    message("COMPILER VERSION: ${MAJOR}.${MINOR}" )
-
-
-    message(" COMPILER DETECTED: ${CONAN_COMPILER} ${MAJOR}.${MINOR}")
-
-    #execute_process (
-    #    COMMAND bash -c "conan install ${CMAKE_SOURCE_DIR} --build"
-    #    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    #)
-
-    if(EXISTS ${CMAKE_SOURCE_DIR}/conanfile.txt)
-        MESSAGE("=====================================================")
-        MESSAGE("Conanfile.txt exists. Installing dependencies")
-        MESSAGE("Executing  : conan install ${CMAKE_SOURCE_DIR} --build=missing -s compiler=${CONAN_COMPILER} -s compiler.version=${CXX_COMPILER_VER} ")
-        MESSAGE("Working dir: ${CMAKE_BINARY_DIR}")
-        MESSAGE("=====================================================")
-
-        execute_process (
-            COMMAND bash -c "conan install ${CMAKE_SOURCE_DIR} --build=missing -s compiler=${CONAN_COMPILER} -s compiler.version=${CXX_COMPILER_VER}"
-            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-        )
-
-       include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-       set(CONAN_SYSTEM_INCLUDES ON)
-       conan_basic_setup()
-   endif()
-   link_libraries(${CONAN_LIBS})
-endif()
+# if(CPPBOILERPLATE_USE_CONAN)
+#
+#     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+#       # using Clang
+#       set(CONAN_COMPILER clang)
+#     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+#       # using GCC
+#       set(CONAN_COMPILER gcc)
+#     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
+#       # using Intel C++
+#     elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+#       # using Visual Studio C++
+#       set(CONAN_COMPILER "Visual Studio")
+#     endif()
+#
+#
+#     STRING_SPLIT( XX "." "${CMAKE_CXX_COMPILER_VERSION}" )
+#     set (MY_LIST a b c d)
+#     list (GET XX 0 MAJOR)
+#     list (GET XX 1 MINOR)
+#     #message ("HEAD = ${HEAD}")
+#     set(CXX_COMPILER_VER ${MAJOR}.${MINOR} )
+#     message("COMPILER VERSION: ${MAJOR}.${MINOR}" )
+#
+#     message(" COMPILER DETECTED: ${CONAN_COMPILER} ${MAJOR}.${MINOR}")
+#
+#     if(EXISTS ${CMAKE_SOURCE_DIR}/conanfile.txt)
+#         MESSAGE("=====================================================")
+#         MESSAGE("Conanfile.txt exists. Installing dependencies")
+#         MESSAGE("Executing  : conan install ${CMAKE_SOURCE_DIR} --build=missing -s compiler=${CONAN_COMPILER} -s compiler.version=${CXX_COMPILER_VER} ")
+#         MESSAGE("Working dir: ${CMAKE_BINARY_DIR}")
+#         MESSAGE("=====================================================")
+#
+#         execute_process (
+#             COMMAND bash -c "conan install ${CMAKE_SOURCE_DIR} --build=missing -s compiler=${CONAN_COMPILER} -s compiler.version=${CXX_COMPILER_VER}"
+#             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+#         )
+#
+#        include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+#        set(CONAN_SYSTEM_INCLUDES ON)
+#        conan_basic_setup()
+#    endif()
+#    link_libraries(${CONAN_LIBS})
+# endif()
 #########################################################
 
+
+if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+    set(CONAN_SYSTEM_INCLUDES ON)
+    conan_basic_setup()
+    link_libraries(${CONAN_LIBS})
+else()
+    if(EXISTS ${CMAKE_SOURCE_DIR}/conanfile.txt)
+        message( FATAL_ERROR
+" A conanfile.txt file exists in the source directory\n"
+" indicating conan is used for dependences but a conanbuildinfo.cmake\n"
+" file does not exist. Make sure to execute:\n\n"
+" conan install ${CMAKE_SOURCE_DIR} --build=missing -if ${CMAKE_BINARY_DIR}" )
+    endif()
+
+endif()
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 

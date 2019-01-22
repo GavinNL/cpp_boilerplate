@@ -12,7 +12,7 @@ Dev:
 [![codecov](https://codecov.io/gh/GavinNL/cpp_boilerplate/branch/dev/graph/badge.svg)](https://codecov.io/gh/GavinNL/cpp_boilerplate)
 ![Codacy branch grade](https://img.shields.io/codacy/grade/4fe50de6102e4d678bacdd292c949310/dev.svg)
 
-This repo is a boilerplate for your C++ projects.
+This repo is a boilerplate for your C++ projects. This includes Continious Integration scripts for travis-ci, appveyor and gitlab.
 
 # Quick Start
 
@@ -33,6 +33,13 @@ your own library/application
 
   # Re-initialize your git repo
   git init
+
+  # Test the build system
+  mkdir build
+  cd build
+  conan install --build missing ..
+  cmake ..
+  cmake --build .
 
   ```
 
@@ -70,12 +77,40 @@ If you have the [Conan Package Manager](http://conan.io) installed, you can down
 ```
 cd $PROJECT_SRC_FOLDER
 mkdir build
-conan install ..
-cmake .. -DCPPBOILERPLATE_USE_CONAN:BOOL=true
+conan install --build missing ..
+cmake ..
 cmake --build .
 ```
 
 If you choose not to use Conan, then you must have the dependencies in your system path. You should still list your packages in the `conanfile.txt` so that the CI system can build and test your library.
+
+## Continious Integration
+
+Continious Integration scripts are provided for Travis-CI, Appveyor and Gitlab Pipelines.
+
+### Gitlab
+
+The Gitlab pipeline will run two stages. The first stage is a CodeCoverage stage which will test the code coverage of your software. The second stage compiles runs all unit tests. The test is compiled on the following compilers through docker:
+
+* clang3.8
+* clang 3.9
+* clang 4.0
+* clang 5.0
+* clang 6.0
+* gcc 5
+* gcc 6
+* gcc 8
+
+The Docker images which are used come pre-installed with the conan package manger and are provided by  https://hub.docker.com/u/lasote
+
+### Travis-CI
+
+Info coming soon.
+
+### Appveyor
+
+Info coming soon.
+
 
 ## Unit Testing
 
