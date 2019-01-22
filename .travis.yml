@@ -56,19 +56,17 @@ matrix:
 #      install: choco install mingw --version 4.9.3 --force
 #      script: mingw32-make travis
 
-
-
     - os: linux
       compiler: gcc
+      env:
+      - COMPILER=g++-7
+      - RUN_CODECOV=TRUE
+      - COMPILER_CC=gcc-7
+      - COMPILER_CXX=g++-7
       addons:
         apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-7
-            - gcc-7
-      env:
-         - COMPILER="CC=gcc-7 && CXX=g++-7"
+          sources: ['ubuntu-toolchain-r-test']
+          packages: ['gcc-7', 'g++-7' ]
       before_install: eval "${COMPILER}"
       install:
         - pip install --user --upgrade pip
