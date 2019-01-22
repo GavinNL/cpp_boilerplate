@@ -1,8 +1,7 @@
-#include <iostream>
+#include <lib1/lib1.h>
 
-int main(int argc, char ** argv)
+int main()
 {
-    std::cout << "Done" << std::endl;
-    return 0;
+    return lib1::foo(32);
 
 }

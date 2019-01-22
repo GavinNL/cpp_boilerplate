@@ -311,9 +311,9 @@ if(CPPBOILERPLATE_ENABLE_COVERAGE)
 endif()
 
 
-
-enable_testing()
-
+if( ${CPPBOILERPLATE_BUILD_TESTS})
+    enable_testing()
+endif()
 
 #########################################################
 # Add the src sub directory. Each subdirectory within
@@ -340,6 +340,6 @@ add_subdirectory(src)
 # linked with all the libraryes in the src/ folder
 #########################################################
 if( ${CPPBOILERPLATE_BUILD_TESTS})
-add_subdirectory(test)
+    add_subdirectory(test)
 endif()
 #########################################################

@@ -1,12 +1,12 @@
 #include<catch2/catch.hpp>
 
-#include <module2/module2.h>
+#include <lib2/lib2.h>
 
 TEST_CASE("Test Module2 code")
 {
     SECTION("test Bar")
     {
-        module2::Bar B();
+        lib2::Bar B();
         CHECK(true);
     }
 }
