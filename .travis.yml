@@ -67,10 +67,8 @@ matrix:
         - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
         - mkdir build && cd build
         - conan install --build missing -s compiler="Visual Studio" -s compiler.version=15 ..
-        - cmake .. -G "Visual Studio 15 2017 Win64"
-        - cmake --build .
-
-
+        - cmake .. -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE:STRING=Release
+        - cmake --build . --config "Release"
 
 
 
