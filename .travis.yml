@@ -78,8 +78,8 @@ matrix:
       script:
         - conan user
         - mkdir build && cd build
-        - conan install --build missing
-        - cmake .. -DCMAKE_BUILD_TYPE:STRING=Release -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE
+        - conan install --build missing ..
+        - cmake .. -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE
         - cmake --build .
         - ctest
 
@@ -91,7 +91,7 @@ matrix:
         - conan user
         - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
         - mkdir build && cd build
-        - conan install --build missing -s compiler="Visual Studio" -s compiler.version=15 -s arch=x86_64..
+        - conan install --build missing -s compiler="Visual Studio" -s compiler.version=15 -s arch=x86_64 ..
         - cmake .. -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE:STRING=Release
         - cmake --build . --config "Release"
 
