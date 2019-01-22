@@ -302,7 +302,7 @@ ENDMACRO()
 # Get a list of all the subdirectories in the src folder. Each of
 # these subdirectories is compiled into its own library
 # which will be linked with all unit tests
-SUBDIRLIST(CPPBOILERPLATE_LIBS ${CMAKE_CURRENT_SOURCE_DIR}/src)
+SUBDIRLIST(CPPBOILERPLATE_LIBS ${CMAKE_CURRENT_SOURCE_DIR}/src/lib)
 
 
 if(CPPBOILERPLATE_ENABLE_COVERAGE)
@@ -318,6 +318,17 @@ enable_testing()
 #########################################################
 # Add the src sub directory. Each subdirectory within
 # the src folder will be compiled into its own library
+#
+# The Src folder contains 2 sub folders: bin and lib
+#
+# All subfolders within the lib folder will be compiled
+# into a library. Ideally each of these libraries
+# should be independent and should not depend on
+# each other.
+#
+# All subfolders within the bin folder will be compiled
+# into an executable and linked with each of the sub
+# folders in src/lib.
 #########################################################
 add_subdirectory(src)
 #########################################################
@@ -332,14 +343,3 @@ if( ${CPPBOILERPLATE_BUILD_TESTS})
 add_subdirectory(test)
 endif()
 #########################################################
-
-
-#########################################################
-# Add the examples directory. Each sub directory within
-# this folder will be compiled into an executable and
-# linked with all the libraries compiled in the src/ foler
-# plus all the dependent libraries defined in the conanfile
-#########################################################
-add_subdirectory(examples)
-#########################################################
-
