@@ -3,16 +3,22 @@ stages:
 #  - analysis
 #  - deploy
 
-# cppcheck:
-#   image: ubuntu:bionic
-#   stage: analysis
-#   before_script:
-#     - apt update
-#     - apt install -y --no-install-recommends cppcheck=1.82-1
-#     - cppcheck --version
-#   script:
-#     - cppcheck lib/*.cpp --verbose --enable=all --inconclusive --language=c++ --error-exitcode=1
-#
+cppcheck:
+  image: ubuntu:bionic
+  stage: analysis
+  before_script:
+    - apt update
+    - apt install -y --no-install-recommends cppcheck=1.82-1
+    - cppcheck --version
+  script:
+    - mkdir cppcheck
+    - cppcheck lib/*.cpp -I include/ --verbose --enable=all --inconclusive --language=c++ --error-exitcode=1
+    - cppcheck .         -I include/ --enable=all --inconclusive --xml-version=2 --force --library=windows,posix,gnu . 2> cppcheck/result.xml
+    - cppcheck-htmlreport --source-encoding="iso8859-1" --title="my project name" --source-dir . --report-dir=cppcheck --file=cppcheck/result.xml
+  artifacts:
+    paths:
+      - build/coverage/
+
 # clang-tidy:
 #   image: base/archlinux:2018.09.01
 #   stage: analysis
@@ -54,10 +60,11 @@ build-gcc7:
 #      - cmake --build . --target memcheck
 #      - cmake --build . --target coverage
       - ctest
-#    artifacts:
-#      paths:
-#        - build/coverage/
-#        - build/test/Testing/Temporary/
+      - mkdir coverage
+      - gcovr . -r .. --html-details --html -o coverage/index.html -e ../test/third_party
+    artifacts:
+      paths:
+        - build/coverage/
 
 build-clang6:
     image: lasote/conanclang60
