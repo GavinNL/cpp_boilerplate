@@ -55,18 +55,40 @@ matrix:
 #    - os: windows
 #      install: choco install mingw --version 4.9.3 --force
 #      script: mingw32-make travis
+
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+            - gcc-7
+      env:
+         - COMPILER="CC=gcc-7 && CXX=g++-7"
+      before_install: eval "${COMPILER}"
+      install:
+        - pip install --user --upgrade pip
+        - pip install --user conan --upgrade
+        - conan user
+        - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+      script: make travis
+        - conan user
+        - mkdir build && cd build
+        - conan install --build missing
+        - cmake .. -DCMAKE_BUILD_TYPE:STRING=Release -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE
+        - cmake --build .
+        - ctest
+
     - os: windows
       install: choco install conan
       script:
         - arch
         - export PATH=$PATH:/c/Program\ Files/Conan/conan
-        #- echo $PWD
-        #- echo $PATH
-        #- ls /c/Program\ Files/Conan/conan
         - conan user
         - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
         - mkdir build && cd build
-        - conan install --build missing -s compiler="Visual Studio" -s compiler.version=15 ..
+        - conan install --build missing -s compiler="Visual Studio" -s compiler.version=15 -s arch=x86_64..
         - cmake .. -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE:STRING=Release
         - cmake --build . --config "Release"
 
