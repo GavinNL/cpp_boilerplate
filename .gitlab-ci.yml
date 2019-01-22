@@ -86,10 +86,13 @@ build-gcc6:
         - build/coverage/
       expire_in: 1 week
 
-build-gcc6:
+build-gcc5:
     extends: .build-gcc7
     image: lasote/conangcc5
 
+build-gcc7:
+    extends: .build-gcc7
+    image: lasote/conangcc7
 
 build-clang6:
     image: lasote/conanclang60
