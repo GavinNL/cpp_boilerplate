@@ -9,7 +9,7 @@ cppcheck:
   stage: analysis
   before_script:
     - apt update
-    - apt install -y --no-install-recommends cppcheck=1.82-1
+    - apt install -y --no-install-recommends cppcheck=1.82-1 python3-pygments python-pygments
     - cppcheck --version
   script:
     - mkdir cppcheck
