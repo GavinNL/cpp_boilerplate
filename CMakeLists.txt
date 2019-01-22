@@ -14,6 +14,8 @@
 
 cmake_minimum_required(VERSION 3.8)
 
+project(CPP_BOILERPLATE)
+
 #CPPBOILERPLATE
 set (CMAKE_CXX_STANDARD 11)
 

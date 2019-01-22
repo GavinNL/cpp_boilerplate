@@ -2,7 +2,6 @@ stages:
 - analysis
 - test
 
-#  - deploy
 
 cppcheck:
   image: ubuntu:bionic
@@ -20,51 +19,6 @@ cppcheck:
     paths:
       - cppcheck/
     expire_in: 1 week
-
-# clang-tidy:
-#   image: base/archlinux:2018.09.01
-#   stage: analysis
-#   variables:
-#     CC: clang
-#     CXX: clang++
-#   before_script:
-#     - pacman -Syu --needed --noconfirm clang-tools-extra=6.0.1-2
-#     - clang-tidy --version
-#   script:
-#     - clang-tidy -warnings-as-errors="*" -checks="-*,clang-analyzer-*,-clang-analyzer-alpha*" lib/hello.cpp -- -Iinclude
-#
-# doxygen:
-#    image: alpine:3.7
-#    stage: analysis
-#    before_script:
-#      - apk update
-#      - apk add --no-cache -t .required_apks doxygen=1.8.13-r1 graphviz=2.40.1-r0
-#      - mkdir -p build/docs
-#    script:
-#      - doxygen docs/Doxyfile
-#    artifacts:
-#      paths:
-#        - build/docs/html/
-
-build-gcc6:
-    image: lasote/conangcc6
-    stage: test
-    before_script:
-      - sudo apt update
-      - sudo apt install gcovr
-      - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
-    script:
-      - mkdir -p build && cd build
-      - conan install --build missing ..
-      - cmake -D CPPBOILERPLATE_USE_CONAN:BOOL=TRUE -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE ..
-      - cmake --build .
-      - ctest
-      - mkdir coverage
-      - gcovr . -r .. --html-details --html -o coverage/index.html -e ../test/third_party
-    artifacts:
-      paths:
-        - build/coverage/
-      expire_in: 1 week
 
 .build-gcc:
     image: lasote/conangcc7
@@ -135,20 +89,3 @@ build-clang60:
     extends: .build-clang
     image: lasote/conanclang60
 
-
-#deploy-bintray:
-#    image: lasote/conangcc7
-#    stage: deploy
-#    before_script:
-#      - sudo apt update
-#      - sudo apt install -y --no-install-recommends curl
-#    script:
-#      - mkdir -p build && cd build
-#      - cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF
-#      - cmake --build .
-#      - cpack -G DEB .
-#    after_script:
-#      - curl -T build/hello-0.1.0.deb -uuilianries:${BINTRAY_API_KEY} "https://api.bintray.com/content/uilianries/dpkg/hello/0.1.0/pool/main/h/hello/hello_0.1.0_amd64.deb;deb_distribution=testing;deb_component=main;deb_architecture=i386,amd64;publish=1"
-#    artifacts:
-#      paths:
-#        - build/*.deb
