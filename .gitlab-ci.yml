@@ -66,7 +66,7 @@ build-gcc6:
         - build/coverage/
       expire_in: 1 week
 
-build-gcc7:
+.build-gcc7:
     image: lasote/conangcc7
     stage: test
     before_script:
@@ -87,7 +87,7 @@ build-gcc7:
       expire_in: 1 week
 
 build-gcc6:
-    extends: build-gcc7
+    extends: .build-gcc7
     image: lasote/conangcc5
 
 
