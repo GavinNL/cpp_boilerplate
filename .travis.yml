@@ -79,7 +79,7 @@ matrix:
         - conan user
         - mkdir build && cd build
         - conan install --build missing ..
-        - cmake .. -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE
+        - cmake .. -DCPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -DCPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE
         - cmake --build .
         - ctest
 
