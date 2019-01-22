@@ -58,7 +58,7 @@ matrix:
     - os: windows
       install: choco install conan
       script:
-        - refreshevn
+        - export PATH=$PATH:/mnt/c/Program\ Files/Conan/conan
         - conan user
         - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
         - mkdir build && cd build
