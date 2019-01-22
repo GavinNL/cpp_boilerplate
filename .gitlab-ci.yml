@@ -13,8 +13,8 @@ cppcheck:
     - cppcheck --version
   script:
     - mkdir cppcheck
-    - cppcheck lib/*.cpp -I include/ --verbose --enable=all --inconclusive --language=c++ --error-exitcode=1
-    - cppcheck .         -I include/ --enable=all --inconclusive --xml-version=2 --force --library=windows,posix,gnu . 2> cppcheck/result.xml
+    - cppcheck . -I include/ --verbose --enable=all --inconclusive --language=c++ --error-exitcode=1
+    - cppcheck . -I include/ --enable=all --inconclusive --xml-version=2 --force --library=windows,posix,gnu . 2> cppcheck/result.xml
     - cppcheck-htmlreport --source-encoding="iso8859-1" --title="my project name" --source-dir . --report-dir=cppcheck --file=cppcheck/result.xml
   artifacts:
     paths:
