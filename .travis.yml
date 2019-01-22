@@ -56,7 +56,10 @@ matrix:
 #      install: choco install mingw --version 4.9.3 --force
 #      script: mingw32-make travis
 
+
+
     - os: linux
+      compiler: gcc
       addons:
         apt:
           sources:
@@ -72,7 +75,7 @@ matrix:
         - pip install --user conan --upgrade
         - conan user
         - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
-      script: make travis
+      script:
         - conan user
         - mkdir build && cd build
         - conan install --build missing
