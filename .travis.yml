@@ -113,6 +113,7 @@ matrix:
     - CONAN_SETTINGS_FLAG=""
     - CMAKE_GENERATOR_FLAG=""
     - ENABLE_COVERAGE=TRUE
+    - UPLOAD_TO_CODECOV=TRUE
     - ENABLE_TESTS=TRUE
     - BUILD_CONFIG=Release
     addons:
@@ -182,3 +183,6 @@ script:
   - eval cmake .. ${CMAKE_GENERATOR_FLAG} ${COVERAGE_FLAGS} ${TEST_FLAGS}
   - eval cmake --build . --config "${BUILD_CONFIG}"
   - if [[ "${ENABLE_TESTS}" == "TRUE" ]]; then ctest -C ${BUILD_CONFIG}; fi
+
+after_success:
+  - if [[ "${UPLOAD_TO_CODECOV}" == "TRUE" ]]; then bash <(curl -s "https://codecov.io/bash"); fi
