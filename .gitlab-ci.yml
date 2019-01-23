@@ -12,7 +12,7 @@ cppcheck:
     - cppcheck --version
   script:
     - mkdir cppcheck
-    - cppcheck . -I include/ --verbose --enable=all --inconclusive --language=c++ --error-exitcode=1
+    #- cppcheck . -I include/ --verbose --enable=all --inconclusive --language=c++ --error-exitcode=1
     - cppcheck . -I include/ --enable=all --inconclusive --xml-version=2 --force --library=windows,posix,gnu . 2> cppcheck/result.xml
     - cppcheck-htmlreport --source-encoding="iso8859-1" --title="my project name" --source-dir . --report-dir=cppcheck --file=cppcheck/result.xml
   artifacts:
@@ -29,7 +29,8 @@ cppcheck:
       - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
     script:
       - mkdir -p build && cd build
-      - conan install --build missing ..
+      #- conan install --build missing ..
+      - if [ -f ../conanfile.txt ]; then conan install --build missing ..; fi
       - cmake -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE ..
       - cmake --build .
       - ctest
@@ -64,7 +65,8 @@ build-gcc7:
       - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
     script:
       - mkdir -p build && cd build
-      - conan install --build missing ..
+      #- conan install --build missing ..
+      - if [ -f ../conanfile.txt ]; then conan install --build missing ..; fi
       - cmake -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE ..
       - cmake --build .
       - ctest
