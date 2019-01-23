@@ -11,8 +11,8 @@ matrix:
     - COMPILER=g++-7
     - COMPILER_CC=gcc-7
     - COMPILER_CXX=g++-7
-    - CONAN_SETTINGS_FLAG='-s compiler="Visual Studio" -s compiler.version=15 -s arch=x86_64'
-    - CMAKE_GENERATOR_FLAG=''
+    - CONAN_SETTINGS_FLAG=""
+    - CMAKE_GENERATOR_FLAG=""
     - ENABLE_COVERAGE=TRUE
     - ENABLE_TESTS=TRUE
     addons:
@@ -22,8 +22,8 @@ matrix:
 
   - os: windows
     env:
-    - CONAN_SETTINGS_FLAG='-s compiler="Visual Studio" -s compiler.version=15 -s arch=x86_64'
-    - CMAKE_GENERATOR_FLAG='-G "Visual Studio 15 2017 Win64"'
+    - CONAN_SETTINGS_FLAG="-s compiler=\"Visual Studio\" -s compiler.version=15 -s arch=x86_64"
+    - CMAKE_GENERATOR_FLAG="-G \"Visual Studio 15 2017 Win64\""
     - ENABLE_COVERAGE=TRUE
     - ENABLE_TESTS=TRUE
     addons:
