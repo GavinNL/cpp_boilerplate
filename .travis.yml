@@ -3,7 +3,19 @@ language: cpp
 matrix:
   include:
 
-  # OSX / Clang
+
+  - os: osx
+    osx_image: xcode10
+    env:
+    - compiler=clang
+    - COMPILER_CC=clang
+    - COMPILER_CXX=clang++
+    - CONAN_SETTINGS_FLAG=""
+    - CMAKE_GENERATOR_FLAG=""
+    - ENABLE_COVERAGE=TRUE
+    - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
+
   - os: linux
     compiler: gcc
     env:
