@@ -21,6 +21,23 @@ matrix:
         sources: ['ubuntu-toolchain-r-test']
         packages: ['gcc-7', 'g++-7' ]
 
+  - os: linux
+    compiler: clang
+    env:
+    - COMPILER=clang++-6.0
+    - COMPILER_CC=clang-6.0
+    - COMPILER_CXX=clang++-6.0
+    - CONAN_SETTINGS_FLAG=""
+    - CMAKE_GENERATOR_FLAG=""
+    - ENABLE_COVERAGE=TRUE
+    - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-6.0']
+        packages: ['clang-6.0' ]
+
+
   - os: windows
     env:
     - CONAN_SETTINGS_FLAG="-s compiler=\"Visual Studio\" -s compiler.version=15 -s arch=x86_64 "
@@ -45,12 +62,15 @@ install:
 script:
   - env
   - if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then export PATH=$PATH:/c/Program\ Files/Conan/conan; fi
-
   - if [[ "${ENABLE_COVERAGE}" == "TRUE" ]]; then export COVERAGE_FLAGS='-DCPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE'; fi
   - if [[ "${ENABLE_TESTS}" == "TRUE" ]]; then export TEST_FLAGS='-DCPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE'; fi
 
   - conan user
   - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+
+  - if [[ "${COMPILER_CXX}" != "" ]]; then export CXX=${COMPILER_CXX}; fi
+  - if [[ "${COMPILER_CC}" != "" ]]; then export CC=${COMPILER_CC}; fi
+
   - mkdir build && cd build
   - eval conan install --build missing ${CONAN_SETTINGS_FLAG} ..
   - eval cmake .. ${CMAKE_GENERATOR_FLAG} ${COVERAGE_FLAGS} ${TEST_FLAGS}
