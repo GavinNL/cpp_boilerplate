@@ -22,7 +22,6 @@ set (CMAKE_CXX_STANDARD 11)
 
 option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
 
-option(CPPBOILERPLATE_USE_CONAN "Use Conan to handle dependencies" OFF)
 option(CPPBOILERPLATE_ENABLE_COVERAGE "Enable Code Coverage flags" OFF)
 option(CPPBOILERPLATE_BUILD_TESTS "Build Tests" ON)
 
