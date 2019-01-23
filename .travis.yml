@@ -3,6 +3,29 @@ language: cpp
 matrix:
   include:
 
+  - os: osx
+    osx_image: xcode8.3
+    env:
+    - compiler=clang
+    - COMPILER_CC=clang
+    - COMPILER_CXX=clang++
+    - CONAN_SETTINGS_FLAG=""
+    - CMAKE_GENERATOR_FLAG=""
+    - ENABLE_COVERAGE=TRUE
+    - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
+
+  - os: osx
+    osx_image: xcode9.4
+    env:
+    - compiler=clang
+    - COMPILER_CC=clang
+    - COMPILER_CXX=clang++
+    - CONAN_SETTINGS_FLAG=""
+    - CMAKE_GENERATOR_FLAG=""
+    - ENABLE_COVERAGE=TRUE
+    - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
 
   - os: osx
     osx_image: xcode10
@@ -112,7 +135,6 @@ matrix:
       apt:
         sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-6.0']
         packages: ['clang-6.0' ]
-
 
   - os: windows
     env:
