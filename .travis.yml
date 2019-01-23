@@ -152,12 +152,40 @@ matrix:
 # The pre-install script. On windows it will install conan via chocolatey
 install:
   - |
-     if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then
-       choco install conan
+     if [[ "$(uname -s)" == 'Darwin' ]]; then
+         brew update || brew update
+         brew outdated pyenv || brew upgrade pyenv
+         brew install pyenv-virtualenv
+         brew install cmake || true
+
+         if which pyenv > /dev/null; then
+             eval "$(pyenv init -)"
+         fi
+
+         pyenv install 2.7.10
+         pyenv virtualenv 2.7.10 conan
+         pyenv rehash
+         pyenv activate conan
+         pip install --upgrade pip
+         pip install conan --upgrade
      else
-       pip install --user --upgrade pip
-       pip install --user conan --upgrade
+         if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then
+           choco install conan
+         else
+           pip install --user --upgrade pip
+           pip install --user conan --upgrade
+         fi
+         #pip install --user --upgrade pip
+         #pip install --user conan --upgrade
      fi
+
+  #- |
+  #   if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then
+  #     choco install conan
+  #   else
+  #     pip install --user --upgrade pip
+  #     pip install --user conan --upgrade
+  #   fi
 
 
 
