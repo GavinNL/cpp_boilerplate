@@ -22,8 +22,8 @@ matrix:
 
   - os: windows
     env:
-    - CONAN_SETTINGS_FLAG="-s compiler=\"Visual Studio\" -s compiler.version=15 -s arch=x86_64"
-    - CMAKE_GENERATOR_FLAG="-G \"Visual Studio 15 2017 Win64\""
+    - CONAN_SETTINGS_FLAG="-s compiler=\"Visual Studio\" -s compiler.version=15 -s arch=x86_64 "
+    - CMAKE_GENERATOR_FLAG="-G \"Visual Studio 15 2017 Win64\" "
     - ENABLE_COVERAGE=TRUE
     - ENABLE_TESTS=TRUE
     addons:
@@ -51,8 +51,8 @@ script:
   - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
   - mkdir build && cd build
   - echo conan install --build missing ${CONAN_SETTINGS_FLAG} ..
-  - conan install --build missing ${CONAN_SETTINGS_FLAG} ..
+  - eval conan install --build missing ${CONAN_SETTINGS_FLAG} ..
   - echo cmake .. ${CMAKE_GENERATOR_FLAG} ${COVERAGE_FLAGS} ${TEST_FLAGS}
-  - cmake .. ${CMAKE_GENERATOR_FLAG} ${COVERAGE_FLAGS} ${TEST_FLAGS}
-  - cmake --build . --config "Release"
+  - eval cmake .. ${CMAKE_GENERATOR_FLAG} ${COVERAGE_FLAGS} ${TEST_FLAGS}
+  - eval cmake --build . --config "Release"
   - if [[ "${ENABLE_TESTS}" == "TRUE" ]]; then ctest; fi
