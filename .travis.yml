@@ -142,9 +142,11 @@ install:
 script:
   - env
 
+
   # The path to conan does not get set properly because travis does not restart the shell
   # so we ahve to manually add the path it on Windows.
   - if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then export PATH=$PATH:/c/Program\ Files/Conan/conan; fi
+  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then export PATH=$PATH:/Users/travis/Library/Python/2.7/bin; fi
 
   - if [[ "${ENABLE_COVERAGE}" == "TRUE" ]]; then export COVERAGE_FLAGS='-DCPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE'; fi
   - if [[ "${ENABLE_TESTS}" == "TRUE" ]]; then export TEST_FLAGS='-DCPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE'; fi
