@@ -4,6 +4,37 @@ matrix:
   include:
 
   # OSX / Clang
+  - os: linux
+    compiler: gcc
+    env:
+    - COMPILER=g++-5
+    - COMPILER_CC=gcc-5
+    - COMPILER_CXX=g++-5
+    - CONAN_SETTINGS_FLAG=""
+    - CMAKE_GENERATOR_FLAG=""
+    - ENABLE_COVERAGE=TRUE
+    - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test']
+        packages: ['gcc-5', 'g++-5' ]
+
+  - os: linux
+    compiler: gcc
+    env:
+    - COMPILER=g++-6
+    - COMPILER_CC=gcc-6
+    - COMPILER_CXX=g++-6
+    - CONAN_SETTINGS_FLAG=""
+    - CMAKE_GENERATOR_FLAG=""
+    - ENABLE_COVERAGE=TRUE
+    - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test']
+        packages: ['gcc-6', 'g++-6' ]
 
   - os: linux
     compiler: gcc
@@ -20,6 +51,39 @@ matrix:
       apt:
         sources: ['ubuntu-toolchain-r-test']
         packages: ['gcc-7', 'g++-7' ]
+
+
+  - os: linux
+    compiler: clang
+    env:
+    - COMPILER=clang++-5.0
+    - COMPILER_CC=clang-5.0
+    - COMPILER_CXX=clang++-5.0
+    - CONAN_SETTINGS_FLAG=""
+    - CMAKE_GENERATOR_FLAG=""
+    - ENABLE_COVERAGE=TRUE
+    - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-5.0']
+        packages: ['clang-5.0' ]
+
+  - os: linux
+    compiler: clang
+    env:
+    - COMPILER=clang++-5.0
+    - COMPILER_CC=clang-5.0
+    - COMPILER_CXX=clang++-5.0
+    - CONAN_SETTINGS_FLAG=""
+    - CMAKE_GENERATOR_FLAG=""
+    - ENABLE_COVERAGE=TRUE
+    - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-5.0']
+        packages: ['clang-5.0' ]
 
   - os: linux
     compiler: clang
@@ -50,6 +114,8 @@ matrix:
         sources: ['ubuntu-toolchain-r-test']
         packages: ['gcc-7', 'g++-7' ]
 
+
+# The pre-install script. On windows it will install conan via chocolatey
 install:
   - |
      if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then
@@ -59,9 +125,15 @@ install:
        pip install --user conan --upgrade
      fi
 
+
+
 script:
   - env
+
+  # The path to conan does not get set properly because travis does not restart the shell
+  # so we ahve to manually add the path it on Windows.
   - if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then export PATH=$PATH:/c/Program\ Files/Conan/conan; fi
+
   - if [[ "${ENABLE_COVERAGE}" == "TRUE" ]]; then export COVERAGE_FLAGS='-DCPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE'; fi
   - if [[ "${ENABLE_TESTS}" == "TRUE" ]]; then export TEST_FLAGS='-DCPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE'; fi
 
