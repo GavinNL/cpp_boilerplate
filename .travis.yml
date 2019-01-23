@@ -42,15 +42,17 @@ install:
 
 script:
   - env
-  - if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then PATH=$PATH:/c/Program\ Files/Conan/conan; fi
+  - if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then export PATH=$PATH:/c/Program\ Files/Conan/conan; fi
 
-  - if [[ "${ENABLE_COVERAGE}" == "TRUE" ]]; then COVERAGE_FLAGS='-DCPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE'; fi
-  - if [[ "${ENABLE_TESTS}" == "TRUE" ]]; then TEST_FLAGS='-DCPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE'; fi
+  - if [[ "${ENABLE_COVERAGE}" == "TRUE" ]]; then export COVERAGE_FLAGS='-DCPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE'; fi
+  - if [[ "${ENABLE_TESTS}" == "TRUE" ]]; then export TEST_FLAGS='-DCPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE'; fi
 
   - conan user
   - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
   - mkdir build && cd build
+  - echo conan install --build missing ${CONAN_SETTINGS_FLAG} ..
   - conan install --build missing ${CONAN_SETTINGS_FLAG} ..
+  - echo cmake .. ${CMAKE_GENERATOR_FLAG} ${COVERAGE_FLAGS} ${TEST_FLAGS}
   - cmake .. ${CMAKE_GENERATOR_FLAG} ${COVERAGE_FLAGS} ${TEST_FLAGS}
   - cmake --build . --config "Release"
   - if [[ "${ENABLE_TESTS}" == "TRUE" ]]; then ctest; fi
