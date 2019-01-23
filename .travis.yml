@@ -144,7 +144,7 @@ script:
   - if [[ "${COMPILER_CC}" != "" ]]; then export CC=${COMPILER_CC}; fi
 
   - mkdir build && cd build
-  - eval conan install --build missing ${CONAN_SETTINGS_FLAG} ..
+  - eval conan install --build  ${CONAN_SETTINGS_FLAG} ..
   - eval cmake .. ${CMAKE_GENERATOR_FLAG} ${COVERAGE_FLAGS} ${TEST_FLAGS}
   - eval cmake --build . --config "${BUILD_CONFIG}"
   - if [[ "${ENABLE_TESTS}" == "TRUE" ]]; then ctest -C ${BUILD_CONFIG}; fi
