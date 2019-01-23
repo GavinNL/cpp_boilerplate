@@ -90,7 +90,7 @@ Continuous Integration scripts are provided for Travis-CI, Appveyor and Gitlab P
 
 The Gitlab pipeline will run two stages. The first stage is a CPP-Check stage which will generate a cppcheck report and html document and export it as build stage artifact.
 
-* clang3.8
+* clang 3.8
 * clang 3.9
 * clang 4.0
 * clang 5.0
@@ -100,6 +100,14 @@ The Gitlab pipeline will run two stages. The first stage is a CPP-Check stage wh
 * gcc 7
 
 The Docker images which are used come pre-installed with the Conan Package Manger and are provided by  https://hub.docker.com/u/lasote
+
+#### CPP-Check
+
+Before executing all the builds/tests. Gitlab will run a stage to execute CppCheck on the source code.  The output of CppCheck can be retrieved by looking at the Gitlab-CI artifact that was produced for that stage.
+
+#### Code Coverage
+
+For each of the builds that are created, a code coverage analysis is performed using gcov. You can view the output by looking at the builds's output artifact.
 
 ### Travis-CI
 

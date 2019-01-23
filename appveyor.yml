@@ -22,15 +22,15 @@ build_script:
 
     cd build
 
-    pip install --user conan
+    IF EXIST "C:\projects\source\conanfile.txt" pip install --user conan
 
-    set PATH=%PATH%;C:\Users\appveyor\AppData\Roaming\Python\Scripts
+    IF EXIST "C:\projects\source\conanfile.txt" set PATH=%PATH%;C:\Users\appveyor\AppData\Roaming\Python\Scripts
 
-    conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+    IF EXIST "C:\projects\source\conanfile.txt" conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
 
-    conan install c:\projects\source --build
+    IF EXIST "C:\projects\source\conanfile.txt" conan install c:\projects\source --build
 
-    cmake c:\projects\source -G "%GENERATOR%" -DCMAKE_BUILD_TYPE:STRING=Release -DCPPBOILERPLATE_USE_CONAN:BOOL=TRUE
+    cmake c:\projects\source -G "%GENERATOR%" -DCMAKE_BUILD_TYPE:STRING=Release
 
     cmake --build . --config "Release"
 
