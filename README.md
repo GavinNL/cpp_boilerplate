@@ -65,9 +65,14 @@ use for your library/application
 | Path      | Description  |
 |-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | include/  | Header files for your project. This folder is added as an include path to your project. If your header is `include/MYLIBRARY/mylibheader.h` Your source code should include header using: `#include<MYLIBRARY/mylibheader.h>` |
-| src/      | Source code for your library. All `.cpp` files should be stored here. Each folder is compiled into a separate library (either shared or static). Eg: `src/mylib/` is compiled into `libmylib.a` or `libmylib.so` |
-| examples/ | Source code for your executables. Each sub folder is compiled into an executable and linked with all libraries in the `src/` folder. |
+| src/lib   | Source code for your libraries. All subfolders will be compiled into its own library |
+| src/bin   | Source code for your executables. All subfolders will be compiled into executables and linked with the libraries in src/lib |
 | test/src/ | All unit tests. Each unit test starts with `unit-`. Unit tests are automatically compiled an executed when Travis CI executes the build  |
+
+### Custom CMakeLists.txt files
+
+The subfolders that reside within `src/lib` and `src/bin` will be compiled automatically. If you need a custom CMakeLists.txt file, simply
+add the CmakeLists.txt file into the library's or executable's folder and it will automatically be included.
 
 ## Third Party Dependencies
 
@@ -90,7 +95,7 @@ Continious Integration scripts are provided for Travis-CI, Appveyor and Gitlab P
 
 ### Gitlab
 
-The Gitlab pipeline will run two stages. The first stage is a CodeCoverage stage which will test the code coverage of your software. The second stage compiles runs all unit tests. The test is compiled on the following compilers through docker:
+The Gitlab pipeline will run two stages. The first stage is a CPP-Check stage which will generate a cppcheck report and html document and export it as build stage artifact.
 
 * clang3.8
 * clang 3.9
@@ -99,7 +104,7 @@ The Gitlab pipeline will run two stages. The first stage is a CodeCoverage stage
 * clang 6.0
 * gcc 5
 * gcc 6
-* gcc 8
+* gcc 7
 
 The Docker images which are used come pre-installed with the conan package manger and are provided by  https://hub.docker.com/u/lasote
 
@@ -121,7 +126,7 @@ To add a C++ unit test to your project. Simply make a copy one of the sample uni
 Unit tests are automatically compiled by default, but you can turn off compiling of unit testing by adding the following flag to your cmake command
 
 ```
-cmake .. -DCPPBOILERPLATE_USE_CONAN:BOOL=TRUE  -DCPPBOILERPLATE_BUILD_TESTS:BOOL=FALSE
+cmake .. -DCPPBOILERPLATE_BUILD_TESTS:BOOL=FALSE
 ```
 
 ## Code Coverage
@@ -130,7 +135,7 @@ Code Coverage is performed by compiling the library with the Code Coverage flag
 turned on and then executing the unit test. It is therefore necessary to have both flags turned on to perform code coverage analysis of your unit tests.
 
 ```
-cmake .. -DCPPBOILERPLATE_USE_CONAN:BOOL=TRUE  -DCPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -DCPPBOILERPLATE_BUILD_TESTS:BOOL=FALSE
+cmake .. -DCPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -DCPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE
 ```
 
 Travis will automatically upload the code coverage reports to codecov.io. It is currently enabled on a single build instance. You only need to have it execute on one build instance.
