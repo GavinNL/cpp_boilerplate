@@ -150,9 +150,14 @@ matrix:
 
 
 before_install:
-  - env
-  - which python
-  - which pip
+  - |
+     if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then
+       choco install conan
+       choco install pip
+     else
+       pip install --user --upgrade pip
+       pip install --user conan --upgrade
+     fi
 
 # The pre-install script. On windows it will install conan via chocolatey
 install:
@@ -196,7 +201,6 @@ install:
 
 script:
   - env
-
 
   # The path to conan does not get set properly because travis does not restart the shell
   # so we ahve to manually add the path it on Windows.
