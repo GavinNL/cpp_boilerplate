@@ -1,95 +1,150 @@
 language: cpp
+
 matrix:
   include:
-#    - os: linux
-#      script: make travis
-#    - os: linux
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
-#          packages:
-#            - g++-4.9
-#            - gcc-4.9
-#      env:
-#         - COMPILER="CC=gcc-4.9 && CXX=g++-4.9"
-#      before_install: eval "${COMPILER}"
-#      script: make travis
-#    - os: linux
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
-#          packages:
-#            - g++-5
-#            - gcc-5
-#      env:
-#         - COMPILER="CC=gcc-5 && CXX=g++-5"
-#      before_install: eval "${COMPILER}"
-#      script: make travis
-#
-#    - os: linux
-#      addons:
-#        apt:
-#          sources:
-#            - ubuntu-toolchain-r-test
-#          packages:
-#            - g++-7
-#            - gcc-7
-#      env:
-#         - COMPILER="CC=gcc-7 && CXX=g++-7"
-#      before_install: eval "${COMPILER}"
-#      script: make travis
-#
-#    - os: linux
-#      compiler: clang
-#      script: make travis
-#    - os: osx
-#      script: make travis
-#    - os: osx
-#      osx_image: xcode10
-#      script: make travis
-#    - os: windows
-#      install: choco install mingw
-#      script: mingw32-make travis
-#    - os: windows
-#      install: choco install mingw --version 4.9.3 --force
-#      script: mingw32-make travis
 
-    - os: linux
-      compiler: gcc
-      env:
-      - COMPILER=g++-7
-      - COMPILER_CC=gcc-7
-      - COMPILER_CXX=g++-7
-      addons:
-        apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['gcc-7', 'g++-7' ]
-      install:
-        - pip install --user --upgrade pip
-        - pip install --user conan --upgrade
-        - conan user
-        - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
-      script:
-        - conan user
-        - mkdir build && cd build
-        - conan install --build missing ..
-        - cmake .. -DCPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -DCPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE
-        - cmake --build .
-        - ctest
+  # OSX / Clang
+  - os: linux
+    compiler: gcc
+    env:
+    - COMPILER=g++-5
+    - COMPILER_CC=gcc-5
+    - COMPILER_CXX=g++-5
+    - CONAN_SETTINGS_FLAG=""
+    - CMAKE_GENERATOR_FLAG=""
+    - ENABLE_COVERAGE=TRUE
+    - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test']
+        packages: ['gcc-5', 'g++-5' ]
 
-    - os: windows
-      install: choco install conan
-      script:
-        - env
-        - export PATH=$PATH:/c/Program\ Files/Conan/conan
-        - conan user
-        - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
-        - mkdir build && cd build
-        - conan install --build missing -s compiler="Visual Studio" -s compiler.version=15 -s arch=x86_64 ..
-        - cmake .. -G "Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE:STRING=Release
-        - cmake --build . --config "Release"
+  - os: linux
+    compiler: gcc
+    env:
+    - COMPILER=g++-6
+    - COMPILER_CC=gcc-6
+    - COMPILER_CXX=g++-6
+    - CONAN_SETTINGS_FLAG=""
+    - CMAKE_GENERATOR_FLAG=""
+    - ENABLE_COVERAGE=TRUE
+    - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test']
+        packages: ['gcc-6', 'g++-6' ]
+
+  - os: linux
+    compiler: gcc
+    env:
+    - COMPILER=g++-7
+    - COMPILER_CC=gcc-7
+    - COMPILER_CXX=g++-7
+    - CONAN_SETTINGS_FLAG=""
+    - CMAKE_GENERATOR_FLAG=""
+    - ENABLE_COVERAGE=TRUE
+    - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test']
+        packages: ['gcc-7', 'g++-7' ]
 
 
+  - os: linux
+    compiler: clang
+    env:
+    - COMPILER=clang++-5.0
+    - COMPILER_CC=clang-5.0
+    - COMPILER_CXX=clang++-5.0
+    - CONAN_SETTINGS_FLAG=""
+    - CMAKE_GENERATOR_FLAG=""
+    - ENABLE_COVERAGE=TRUE
+    - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-5.0']
+        packages: ['clang-5.0' ]
 
+  - os: linux
+    compiler: clang
+    env:
+    - COMPILER=clang++-5.0
+    - COMPILER_CC=clang-5.0
+    - COMPILER_CXX=clang++-5.0
+    - CONAN_SETTINGS_FLAG=""
+    - CMAKE_GENERATOR_FLAG=""
+    - ENABLE_COVERAGE=TRUE
+    - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-5.0']
+        packages: ['clang-5.0' ]
+
+  - os: linux
+    compiler: clang
+    env:
+    - COMPILER=clang++-6.0
+    - COMPILER_CC=clang-6.0
+    - COMPILER_CXX=clang++-6.0
+    - CONAN_SETTINGS_FLAG=""
+    - CMAKE_GENERATOR_FLAG=""
+    - ENABLE_COVERAGE=TRUE
+    - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-6.0']
+        packages: ['clang-6.0' ]
+
+
+  - os: windows
+    env:
+    - CONAN_SETTINGS_FLAG="-s compiler=\"Visual Studio\" -s compiler.version=15 -s arch=x86_64 "
+    - CMAKE_GENERATOR_FLAG="-G \"Visual Studio 15 2017 Win64\" "
+    - ENABLE_COVERAGE=FALSE
+    - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
+    addons:
+      apt:
+        sources: ['ubuntu-toolchain-r-test']
+        packages: ['gcc-7', 'g++-7' ]
+
+
+# The pre-install script. On windows it will install conan via chocolatey
+install:
+  - |
+     if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then
+       choco install conan
+     else
+       pip install --user --upgrade pip
+       pip install --user conan --upgrade
+     fi
+
+
+
+script:
+  - env
+
+  # The path to conan does not get set properly because travis does not restart the shell
+  # so we ahve to manually add the path it on Windows.
+  - if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then export PATH=$PATH:/c/Program\ Files/Conan/conan; fi
+
+  - if [[ "${ENABLE_COVERAGE}" == "TRUE" ]]; then export COVERAGE_FLAGS='-DCPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE'; fi
+  - if [[ "${ENABLE_TESTS}" == "TRUE" ]]; then export TEST_FLAGS='-DCPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE'; fi
+
+  - conan user
+  - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+
+  - if [[ "${COMPILER_CXX}" != "" ]]; then export CXX=${COMPILER_CXX}; fi
+  - if [[ "${COMPILER_CC}" != "" ]]; then export CC=${COMPILER_CC}; fi
+
+  - mkdir build && cd build
+  - eval conan install .. --build  ${CONAN_SETTINGS_FLAG}
+  - eval cmake .. ${CMAKE_GENERATOR_FLAG} ${COVERAGE_FLAGS} ${TEST_FLAGS}
+  - eval cmake --build . --config "${BUILD_CONFIG}"
+  - if [[ "${ENABLE_TESTS}" == "TRUE" ]]; then ctest -C ${BUILD_CONFIG}; fi
