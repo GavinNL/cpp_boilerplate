@@ -1,18 +1,11 @@
-# cpp_boilerplate
+# C++ Boilerplate
 
-Master:
-[![Build Status](https://travis-ci.org/GavinNL/cpp_boilerplate.svg?branch=master)](https://travis-ci.org/GavinNL/cpp_boilerplate)
-[![Build status](https://ci.appveyor.com/api/projects/status/0tsak73ak5c2mhbu/branch/master?svg=true)](https://ci.appveyor.com/project/GavinNL/cpp-boilerplate/branch/master)
-[![codecov](https://codecov.io/gh/GavinNL/cpp_boilerplate/branch/master/graph/badge.svg)](https://codecov.io/gh/GavinNL/cpp_boilerplate)
-![Codacy branch grade](https://img.shields.io/codacy/grade/4fe50de6102e4d678bacdd292c949310/master.svg)
+| Branch      | Gitlab-CI  | Travis-CI | Appveyor | CodeCov | Codacy
+|-----------|-----------------------------------------------------------------------------------------------------------------|
+| master    | [![Build Status](https://gitlab.com/GavinNL/cpp_boilerplate/badges/master/build.svg)](https://gitlab.com/GavinNL/cpp_boilerplate/pipelines/)| [![Build Status](https://travis-ci.org/GavinNL/cpp_boilerplate.svg?branch=master)](https://travis-ci.org/GavinNL/cpp_boilerplate)| [![Build status](https://ci.appveyor.com/api/projects/status/0tsak73ak5c2mhbu/branch/master?svg=true)](https://ci.appveyor.com/project/GavinNL/cpp-boilerplate/branch/master)| [![codecov](https://codecov.io/gh/GavinNL/cpp_boilerplate/branch/master/graph/badge.svg)](https://codecov.io/gh/GavinNL/cpp_boilerplate)| ![Codacy branch grade](https://img.shields.io/codacy/grade/4fe50de6102e4d678bacdd292c949310/master.svg)
+| dev       | [![Build Status](https://gitlab.com/GavinNL/cpp_boilerplate/badges/dev/build.svg)](https://gitlab.com/GavinNL/cpp_boilerplate/pipelines/) | [![Build Status](https://travis-ci.org/GavinNL/cpp_boilerplate.svg?branch=dev)](https://travis-ci.org/GavinNL/cpp_boilerplate)| [![Build status](https://ci.appveyor.com/api/projects/status/0tsak73ak5c2mhbu/branch/dev?svg=true)](https://ci.appveyor.com/project/GavinNL/cpp-boilerplate/branch/dev)| [![codecov](https://codecov.io/gh/GavinNL/cpp_boilerplate/branch/dev/graph/badge.svg)](https://codecov.io/gh/GavinNL/cpp_boilerplate) | ![Codacy branch grade](https://img.shields.io/codacy/grade/4fe50de6102e4d678bacdd292c949310/dev.svg)
 
-Dev:
-[![Build Status](https://travis-ci.org/GavinNL/cpp_boilerplate.svg?branch=dev)](https://travis-ci.org/GavinNL/cpp_boilerplate)
-[![Build status](https://ci.appveyor.com/api/projects/status/0tsak73ak5c2mhbu/branch/dev?svg=true)](https://ci.appveyor.com/project/GavinNL/cpp-boilerplate/branch/dev)
-[![codecov](https://codecov.io/gh/GavinNL/cpp_boilerplate/branch/dev/graph/badge.svg)](https://codecov.io/gh/GavinNL/cpp_boilerplate)
-![Codacy branch grade](https://img.shields.io/codacy/grade/4fe50de6102e4d678bacdd292c949310/dev.svg)
-
-This repo is a boilerplate for your C++ projects. This includes Continious Integration scripts for travis-ci, appveyor and gitlab.
+This repo is a boilerplate for your C++ projects. This includes Continuous Integration scripts for Travis-ci, Appveyor and Gitlab-CI.
 
 # Quick Start
 
@@ -89,9 +82,9 @@ cmake --build .
 
 If you choose not to use Conan, then you must have the dependencies in your system path. You should still list your packages in the `conanfile.txt` so that the CI system can build and test your library.
 
-## Continious Integration
+## Continuous Integration
 
-Continious Integration scripts are provided for Travis-CI, Appveyor and Gitlab Pipelines.
+Continuous Integration scripts are provided for Travis-CI, Appveyor and Gitlab Pipelines.
 
 ### Gitlab
 
@@ -106,15 +99,26 @@ The Gitlab pipeline will run two stages. The first stage is a CPP-Check stage wh
 * gcc 6
 * gcc 7
 
-The Docker images which are used come pre-installed with the conan package manger and are provided by  https://hub.docker.com/u/lasote
+The Docker images which are used come pre-installed with the Conan Package Manger and are provided by  https://hub.docker.com/u/lasote
 
 ### Travis-CI
 
-Info coming soon.
+The Travis-CI builds execute on the following platforms/compilers
+
+* Mac XCode LLVM 8.3
+* Mac XCode LLVM 9.4
+* Mac XCode LLVM 10
+* Linux clang 5.0
+* Linux clang 6.0
+* Linux clang 7.0
+* Linux gcc 5
+* Linux gcc 6
+* Linux gcc 7
+* Windows Visual Studio 2017
 
 ### Appveyor
 
-Info coming soon.
+Info coming soon. May be deprecated in favour of Travis-CI's windows builds.
 
 
 ## Unit Testing
@@ -142,27 +146,6 @@ Travis will automatically upload the code coverage reports to codecov.io. It is 
 
 To enable code coverage, add `- RUN_CODECOV=TRUE` to the `env` section of a single build in `.travis.yaml`. Then enable your repository in your codecov.io account
 
-
-## CI with Travis
-
-Log into your Travis-CI account and enable CI for your repo. It will automatically pull the code, compile it and run the unit tests and code coverage tests. Modify the `.travis.yaml` file for your specific needs. The default behaviour is to run the build on the following architectures:
-
-|Linux      |  Mac                  | Windows    |
-|-----------|-----------------------|------------|
-|gcc-4.8    |  Apple LLVM clang 7   | VS 2017    |
-|gcc-4.9    |  Apple LLVM clang 8   | VS 2015    |
-|gcc-5      |  Apple LLVM clang 9   |            |
-|gcc-6      |  Apple LLVM clang 10  |            |
-|gcc-7      |                       |            |
-|gcc-8      |                       |            |
-|clang-3.5  |                       |            |
-|clang-3.6  |                       |            |
-|clang-3.7  |                       |            |
-|clang-3.8  |                       |            |
-|clang-3.9  |                       |            |
-|clang-4.0  |                       |            |
-|clang-5.0  |                       |            |
-|clang-6.0  |                       |            |
 
 ## Code Quality with Codacy
 
