@@ -1,9 +1,9 @@
-#include <module2/module2.h>
+#include <lib2/lib2.h>
 #include <iostream>
 
-#include <boilerplate/boilerplate.h>
+#include <lib1/lib1.h>
 
-namespace module2
+namespace lib2
 {
     Bar::Bar()
     {
@@ -13,7 +13,7 @@ namespace module2
    Bar::~Bar()
     {
         std::cout << "Bar destroyed" << std::endl;
-        boilerplate::foo(4);
+        lib1::foo(4);
     }
 
 }
