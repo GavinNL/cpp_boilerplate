@@ -67,7 +67,7 @@ matrix:
         apt:
           sources: ['ubuntu-toolchain-r-test']
           packages: ['gcc-7', 'g++-7' ]
-      before_install: eval "${COMPILER}"
+#      before_install: eval "${COMPILER}"
       install:
         - pip install --user --upgrade pip
         - pip install --user conan --upgrade
