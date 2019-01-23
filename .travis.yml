@@ -15,6 +15,7 @@ matrix:
     - CMAKE_GENERATOR_FLAG=""
     - ENABLE_COVERAGE=TRUE
     - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
     addons:
       apt:
         sources: ['ubuntu-toolchain-r-test']
@@ -26,6 +27,7 @@ matrix:
     - CMAKE_GENERATOR_FLAG="-G \"Visual Studio 15 2017 Win64\" "
     - ENABLE_COVERAGE=FALSE
     - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
     addons:
       apt:
         sources: ['ubuntu-toolchain-r-test']
@@ -52,5 +54,5 @@ script:
   - mkdir build && cd build
   - eval conan install --build missing ${CONAN_SETTINGS_FLAG} ..
   - eval cmake .. ${CMAKE_GENERATOR_FLAG} ${COVERAGE_FLAGS} ${TEST_FLAGS}
-  - eval cmake --build . --config "Release"
-  - if [[ "${ENABLE_TESTS}" == "TRUE" ]]; then ctest; fi
+  - eval cmake --build . --config "${BUILD_CONFIG}"
+  - if [[ "${ENABLE_TESTS}" == "TRUE" ]]; then ctest -C ${BUILD_CONFIG}; fi
