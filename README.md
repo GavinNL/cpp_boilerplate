@@ -1,11 +1,31 @@
 # C++ Boilerplate
 
+This repository is a template for your C++ projects. This includes Continuous Integration scripts for Travis-ci, Appveyor and Gitlab-CI.
+
+# Badges
+
 | Branch | Gitlab-CI | Travis-CI | Appveyor  | CodeCov   | Codacy    |
 |--------|-----------|-----------|-----------|-----------|-----------|
-| master    | [![Build Status](https://gitlab.com/GavinNL/cpp_boilerplate/badges/master/build.svg)](https://gitlab.com/GavinNL/cpp_boilerplate/pipelines/) | [![Build Status](https://travis-ci.org/GavinNL/cpp_boilerplate.svg?branch=master)](https://travis-ci.org/GavinNL/cpp_boilerplate) | [![Build status](https://ci.appveyor.com/api/projects/status/0tsak73ak5c2mhbu/branch/master?svg=true)](https://ci.appveyor.com/project/GavinNL/cpp-boilerplate/branch/master) | [![codecov](https://codecov.io/gh/GavinNL/cpp_boilerplate/branch/master/graph/badge.svg)](https://codecov.io/gh/GavinNL/cpp_boilerplate) | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4fe50de6102e4d678bacdd292c949310)](https://www.codacy.com/app/GavinNL/cpp_boilerplate?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=GavinNL/cpp_boilerplate&amp;utm_campaign=Badge_Grade) |
-| dev       | [![Build Status](https://gitlab.com/GavinNL/cpp_boilerplate/badges/dev/build.svg)](https://gitlab.com/GavinNL/cpp_boilerplate/pipelines/) | [![Build Status](https://travis-ci.org/GavinNL/cpp_boilerplate.svg?branch=dev)](https://travis-ci.org/GavinNL/cpp_boilerplate) | [![Build status](https://ci.appveyor.com/api/projects/status/0tsak73ak5c2mhbu/branch/dev?svg=true)](https://ci.appveyor.com/project/GavinNL/cpp-boilerplate/branch/dev) | [![codecov](https://codecov.io/gh/GavinNL/cpp_boilerplate/branch/dev/graph/badge.svg)](https://codecov.io/gh/GavinNL/cpp_boilerplate) | ![Codacy branch grade](https://img.shields.io/codacy/grade/4fe50de6102e4d678bacdd292c949310/dev.svg) |
+| master | [![Build Status](https://gitlab.com/GavinNL/cpp_boilerplate/badges/master/build.svg)](https://gitlab.com/GavinNL/cpp_boilerplate/pipelines/) | [![Build Status](https://travis-ci.org/GavinNL/cpp_boilerplate.svg?branch=master)](https://travis-ci.org/GavinNL/cpp_boilerplate) | [![Build status](https://ci.appveyor.com/api/projects/status/0tsak73ak5c2mhbu/branch/master?svg=true)](https://ci.appveyor.com/project/GavinNL/cpp-boilerplate/branch/master) | [![codecov](https://codecov.io/gh/GavinNL/cpp_boilerplate/branch/master/graph/badge.svg)](https://codecov.io/gh/GavinNL/cpp_boilerplate) | [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4fe50de6102e4d678bacdd292c949310)](https://www.codacy.com/app/GavinNL/cpp_boilerplate?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=GavinNL/cpp_boilerplate&amp;utm_campaign=Badge_Grade) |
+| dev    | [![Build Status](https://gitlab.com/GavinNL/cpp_boilerplate/badges/dev/build.svg)](https://gitlab.com/GavinNL/cpp_boilerplate/pipelines/) | [![Build Status](https://travis-ci.org/GavinNL/cpp_boilerplate.svg?branch=dev)](https://travis-ci.org/GavinNL/cpp_boilerplate) | [![Build status](https://ci.appveyor.com/api/projects/status/0tsak73ak5c2mhbu/branch/dev?svg=true)](https://ci.appveyor.com/project/GavinNL/cpp-boilerplate/branch/dev) | [![codecov](https://codecov.io/gh/GavinNL/cpp_boilerplate/branch/dev/graph/badge.svg)](https://codecov.io/gh/GavinNL/cpp_boilerplate) | ![Codacy branch grade](https://img.shields.io/codacy/grade/4fe50de6102e4d678bacdd292c949310/dev.svg) |
 
-This repo is a boilerplate for your C++ projects. This includes Continuous Integration scripts for Travis-ci, Appveyor and Gitlab-CI.
+
+## Gitlab-CI Code Coverage using GCOV
+
+If using Gitlab-CI, the GCC builds will generate code coverage reports. These reports include an HTML report, a text report and a badge. The code coverage is performed within Gitlab using GCOV and not an external service such as codecov.io. The badge is generated using shields.io
+
+| Branch | build-gcc5 | build-gcc6 | build-gcc7 |
+|--------|------------|------------|------------|
+| master | [![Build Status](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/master/raw/build/coverage/badge.png?job=build-gcc5)](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/master/file/build/coverage/html/index.html?job=build-gcc5) | [![Build Status](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/master/raw/build/coverage/badge.png?job=build-gcc6)](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/master/file/build/coverage/html/index.html?job=build-gcc6) | [![Build Status](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/master/raw/build/coverage/badge.png?job=build-gcc7)](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/master/file/build/coverage/html/index.html?job=build-gcc7) |
+| dev    | [![Build Status](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/dev/raw/build/coverage/badge.png?job=build-gcc5)](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/dev/file/build/coverage/html/index.html?job=build-gcc5) | [![Build Status](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/dev/raw/build/coverage/badge.png?job=build-gcc6)](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/dev/file/build/coverage/html/index.html?job=build-gcc6) | [![Build Status](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/dev/raw/build/coverage/badge.png?job=build-gcc7)](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/dev/file/build/coverage/html/index.html?job=build-gcc7) |
+| gcov   | [![Build Status](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/gcov/raw/build/coverage/badge.png?job=build-gcc5)](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/gcov/file/build/coverage/html/index.html?job=build-gcc5) | [![Build Status](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/gcov/raw/build/coverage/badge.png?job=build-gcc6)](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/gcov/file/build/coverage/html/index.html?job=build-gcc6) | [![Build Status](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/gcov/raw/build/coverage/badge.png?job=build-gcc7)](https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/gcov/file/build/coverage/html/index.html?job=build-gcc7) |
+
+### Gitlab-CI Cpp Check
+
+If running through Gitlab-CI, the first stage in the pipeline is to execute cppcheck and generate a report. The report can be found here.
+
+https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/master/file/cppcheck/index.html?job=cppcheck
+https://gitlab.com/gavinNL/cpp_boilerplate/-/jobs/artifacts/dev/file/cppcheck/index.html?job=cppcheck
 
 # Quick Start
 
@@ -34,6 +54,15 @@ your own library/application
   cmake ..
   cmake --build .
 
+  ```
+
+On Windows you need to specify a few more properties for conan/cmake to indicate which configuration to build.
+  ```
+  mkdir build
+  cd build
+  conan install .. --build missing -s compiler="Visual Studio" -s compiler.version=15 -s arch=x86_64
+  cmake .. -G "Visual Studio 15 2017 Win64"
+  cmake --build . --config "Release"
   ```
 
 2. Edit (or delete) the `conanfile.txt` file with the dependencies you wish to
