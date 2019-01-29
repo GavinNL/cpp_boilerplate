@@ -40,7 +40,7 @@ cppcheck:
       - gcovr . -r .. --html-details --html -o coverage/html/index.html --exclude=../test/third_party/.* --exclude=../src/bin/.*
       - gcovr . -r .. --xml -o coverage/report.xml --exclude=../test/third_party/.* --exclude=../src/bin.*
       - gcovr . -r .. --exclude=../test/third_party/.* --exclude=../src/bin/.* > coverage/report.txt
-      - bash ../.ci-scripts/generate_gcov_badge.sh coverage/badge.png
+      - bash ../.ci-scripts/generate_gcov_badge.sh coverage/report.txt coverage/badge.png
     artifacts:
       paths:
         - build/coverage/
