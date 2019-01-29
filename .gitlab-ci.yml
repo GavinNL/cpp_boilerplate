@@ -54,6 +54,11 @@ build-gcc7:
     extends: .build-gcc
     image: lasote/conangcc7
 
+build-gcc8:
+    extends: .build-gcc
+    image: lasote/conangcc8
+    dependencies:
+      - build-gcc7
 
 
 .build-clang:
