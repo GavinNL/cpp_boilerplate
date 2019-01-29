@@ -12,4 +12,4 @@ PERCENT=$(cat ${REPORT_FILE} | tail -n 2|  awk '{print $NF}' | head -n 1)
 
 VALUE=${PERCENT%?}
 
-curl "https://img.shields.io/badge/Coverage-${VALUE}%25-green.svg"
+curl "https://img.shields.io/badge/Coverage-${VALUE}%25-green.png" --output $2
