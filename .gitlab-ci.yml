@@ -25,7 +25,7 @@ cppcheck:
     stage: test
     before_script:
       - sudo apt update
-      - sudo apt install gcovr curl
+      - sudo apt install -y gcovr curl
       - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
     script:
       - mkdir -p build && cd build
