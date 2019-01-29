@@ -1,6 +1,7 @@
 stages:
 - analysis
 - test
+- package
 
 
 cppcheck:
@@ -56,6 +57,7 @@ build-gcc7:
 
 build-gcc8:
     extends: .build-gcc
+    stage: package
     image: lasote/conangcc8
     dependencies:
       - build-gcc7
