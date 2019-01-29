@@ -25,7 +25,8 @@ cppcheck:
     stage: test
     before_script:
       - sudo apt update
-      - sudo apt install -y gcovr curl
+      - sudo apt install -y curl
+      - sudo pip install gcovr
       - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
     script:
       - mkdir -p build && cd build
@@ -37,6 +38,8 @@ cppcheck:
       - mkdir coverage
       - mkdir coverage/html
       #- gcovr . -r .. --html-details --html -o coverage/index.html -e ../test/third_party
+
+      - gcovr . -r .. --html-details --html -o coverage/html/index.html --exclude=../test/third_party/.* --exclude=../src/bin/.*
       - gcovr . -r .. --html-details --html -o coverage/html/index.html --exclude=../test/third_party/.* --exclude=../src/bin/.*
       - gcovr . -r .. --xml -o coverage/report.xml --exclude=../test/third_party/.* --exclude=../src/bin.*
       - gcovr . -r .. --exclude=../test/third_party/.* --exclude=../src/bin/.* > coverage/report.txt
