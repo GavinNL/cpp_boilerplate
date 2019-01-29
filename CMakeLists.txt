@@ -21,15 +21,33 @@ set (CMAKE_CXX_STANDARD 11)
 
 
 option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
-
 option(CPPBOILERPLATE_ENABLE_COVERAGE "Enable Code Coverage flags" OFF)
 option(CPPBOILERPLATE_BUILD_TESTS "Build Tests" ON)
 
+
+
 #########################################################
-FILE(GLOB TEXT_FILES  "*.yml" )
+# Project defined settings. These values should be
+# edited by the user
+#########################################################
+set(CPPBOILERPLATE_MAJOR_VERSION 1)
+set(CPPBOILERPLATE_MINOR_VERSION 0)
+set(CPPBOILERPLATE_PATCH_VERSION 0)
+set(CPPBOILERPLATE_PACKAGE_VENDOR "Gavin Wolf")
+set(CPPBOILERPLATE_PACKAGE_CONTACT "gavin@wolf.com")
+set(CPPBOILERPLATE_PACKAGE_INSTALL_PREFIX "/usr/local")
+#########################################################
+
+
+
+
+
+#########################################################
+FILE(GLOB TEXT_FILES  "*.yml"  )
 add_custom_target(ci_files    SOURCES ${TEXT_FILES} .travis/install.sh .travis/build.sh conanfile.txt)
 
-FILE(GLOB README_FILES  "*.md" )
+
+FILE(GLOB README_FILES  "*.md" ".gitignore" )
 add_custom_target(readme    SOURCES ${README_FILES})
 #########################################################
 
@@ -196,3 +214,28 @@ if( ${CPPBOILERPLATE_BUILD_TESTS})
     add_subdirectory(test)
 endif()
 #########################################################
+
+
+
+
+
+# Install ######################################################################
+
+install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+# Package Generator  ###########################################################
+include(InstallRequiredSystemLibraries)
+set(CPACK_PACKAGE_DESCRIPTION "Hello library")
+set(CPACK_PACKAGE_VERSION_MAJOR "${CPPBOILERPLATE_MAJOR_VERSION}")
+set(CPACK_PACKAGE_VERSION_MINOR "${CPPBOILERPLATE_MINOR_VERSION}")
+set(CPACK_PACKAGE_VERSION_PATCH "${CPPBOILERPLATE_PATCH_VERSION}")
+set(CPACK_PACKAGE_VENDOR  ${CPPBOILERPLATE_PACKAGE_VENDOR})
+set(CPACK_PACKAGE_CONTACT ${CPPBOILERPLATE_PACKAGE_CONTACT})
+
+set(CPACK_SET_DESTDIR true)
+set(CPACK_INSTALL_PREFIX CPPBOILERPLATE_PACKAGE_INSTALL_PREFIX)
+
+set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CPPBOILERPLATE_MAJOR_VERSION}.${CPPBOILERPLATE_MINOR_VERSION}.${CPPBOILERPLATE_PATCH_VERSION}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "CPackExample")
+include (CPack)
+

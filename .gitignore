@@ -33,6 +33,7 @@
 
 # Build directories
 build/*
+build-*/
 
 # Qtcreator files
 *.user
