@@ -28,6 +28,7 @@ cppcheck:
       BUILD_CONFIG: 'Debug'
       BUILD_TESTS: 'TRUE'
       ENABLE_COVERAGE: 'TRUE'
+      BUILD_PACKAGE: 'FALSE'
     before_script:
       - sudo apt update
       - sudo apt install gcovr
@@ -39,10 +40,10 @@ cppcheck:
       - if [ -f ../conanfile.txt ]; then conan install --build missing ..; fi
       - cmake -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=$ENABLE_COVERAGE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=$BUILD_TESTS ..
       - cmake --build . --config $BUILD_CONFIG
-      - ctest
+      - if [[ "${BUILD_TESTS}" == "TRUE" ]]; then ctest; fi
       - rm -rf coverage && mkdir coverage
       - if [[ "${ENABLE_COVERAGE}" == "TRUE" ]]; then gcovr . -r .. --html-details --html -o coverage/index.html -e ../test/third_party; fi
-
+      - if [[ "${BUILD_PACKAGE}" == "TRUE" ]]; then cpack -G DEB; fi
     artifacts:
       paths:
         - build/coverage/
@@ -73,7 +74,11 @@ package-gcc8:
       BUILD_CONFIG: 'Release'
       BUILD_TESTS: 'False'
       ENABLE_COVERAGE: 'FALSE'
-
+      BUILD_PACKAGE: TRUE
+    artifacts:
+      paths:
+        - ./*.deb
+      expire_in: 1 week
 
 .build-clang:
     image: lasote/conanclang60
