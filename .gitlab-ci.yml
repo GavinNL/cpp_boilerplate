@@ -25,7 +25,6 @@ cppcheck:
     image: lasote/conangcc7
     stage: test
     variables:
-      BUILD_COVERAGE: 'TRUE'
       BUILD_CONFIG: 'Debug'
       BUILD_TESTS: 'TRUE'
       ENABLE_COVERAGE: 'TRUE'
@@ -34,14 +33,16 @@ cppcheck:
       - sudo apt install gcovr
       - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
     script:
+      - env
       - mkdir -p build && cd build
       #- conan install --build missing ..
       - if [ -f ../conanfile.txt ]; then conan install --build missing ..; fi
       - cmake -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=$ENABLE_COVERAGE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=$BUILD_TESTS ..
       - cmake --build . --config $BUILD_CONFIG
       - ctest
-      - mkdir coverage
-      - gcovr . -r .. --html-details --html -o coverage/index.html -e ../test/third_party
+      - rm -rf coverage && mkdir coverage
+      - if [[ "${ENABLE_COVERAGE}" == "TRUE" ]]; then gcovr . -r .. --html-details --html -o coverage/index.html -e ../test/third_party; fi
+
     artifacts:
       paths:
         - build/coverage/
@@ -64,6 +65,10 @@ build-gcc8:
     extends: .build-gcc
     stage: package
     image: lasote/conangcc8
+    variables:
+      BUILD_CONFIG: 'Release'
+      BUILD_TESTS: 'False'
+      ENABLE_COVERAGE: 'FALSE'
 
 
 .build-clang:
