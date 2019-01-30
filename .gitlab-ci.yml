@@ -50,6 +50,12 @@ cppcheck:
         - build/coverage/
       expire_in: 1 week
 
+win-test:
+    stage: analysis
+    only: [tags]
+    script:
+        - echo Working...
+    tags: [win7]
 
 build-gcc5:
     extends: .build-gcc
