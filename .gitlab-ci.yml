@@ -21,6 +21,14 @@ cppcheck:
       - cppcheck/
     expire_in: 1 week
 
+win-test:
+    stage: analysis
+    only: [tags]
+    image: Windows7_x64
+    script:
+        - echo Working...
+    tags: [win7]
+
 .build-gcc:
     image: lasote/conangcc7
     stage: test
@@ -49,13 +57,6 @@ cppcheck:
       paths:
         - build/coverage/
       expire_in: 1 week
-
-win-test:
-    stage: analysis
-    only: [tags]
-    script:
-        - echo Working...
-    tags: [win7]
 
 build-gcc5:
     extends: .build-gcc
