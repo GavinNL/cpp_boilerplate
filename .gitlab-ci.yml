@@ -44,6 +44,7 @@ cppcheck:
       - rm -rf coverage && mkdir coverage
       - if [[ "${ENABLE_COVERAGE}" == "TRUE" ]]; then gcovr . -r .. --html-details --html -o coverage/index.html -e ../test/third_party; fi
       - if [[ "${BUILD_PACKAGE}" == "TRUE" ]]; then cpack -G DEB; fi
+      - if [[ "${BUILD_PACKAGE}" == "TRUE" ]]; then (mkdir package && mv *.deb package) ; fi
     artifacts:
       paths:
         - build/coverage/
@@ -77,7 +78,7 @@ package-gcc8:
       BUILD_PACKAGE: 'TRUE'
     artifacts:
       paths:
-        - *.deb
+        - package/
       expire_in: 1 week
 
 .build-clang:
