@@ -4,8 +4,7 @@ stages:
 - package
 
 windows_job:
-  stage:
-    - analysis
+  stage: analysis
   tags:
     - win7
   script:
