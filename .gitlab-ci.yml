@@ -63,6 +63,10 @@ build-gcc7:
 
 build-gcc8:
     extends: .build-gcc
+    image: lasote/conangcc7
+
+package-gcc8:
+    extends: .build-gcc
     stage: package
     image: lasote/conangcc8
     variables:
