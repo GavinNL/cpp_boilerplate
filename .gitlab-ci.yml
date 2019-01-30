@@ -24,6 +24,11 @@ cppcheck:
 .build-gcc:
     image: lasote/conangcc7
     stage: test
+    variables:
+      BUILD_COVERAGE: 'TRUE'
+      BUILD_CONFIG: 'Debug'
+      BUILD_TESTS: 'TRUE'
+      ENABLE_COVERAGE: 'TRUE'
     before_script:
       - sudo apt update
       - sudo apt install gcovr
@@ -32,8 +37,8 @@ cppcheck:
       - mkdir -p build && cd build
       #- conan install --build missing ..
       - if [ -f ../conanfile.txt ]; then conan install --build missing ..; fi
-      - cmake -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE ..
-      - cmake --build .
+      - cmake -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=$ENABLE_COVERAGE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=$BUILD_TESTS ..
+      - cmake --build . --config $BUILD_CONFIG
       - ctest
       - mkdir coverage
       - gcovr . -r .. --html-details --html -o coverage/index.html -e ../test/third_party
@@ -59,8 +64,6 @@ build-gcc8:
     extends: .build-gcc
     stage: package
     image: lasote/conangcc8
-    dependencies:
-      - build-gcc7
 
 
 .build-clang:
