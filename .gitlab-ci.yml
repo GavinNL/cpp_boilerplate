@@ -77,7 +77,7 @@ package-gcc8:
       BUILD_PACKAGE: 'TRUE'
     artifacts:
       paths:
-        - ./*.deb
+        - *.deb
       expire_in: 1 week
 
 .build-clang:
