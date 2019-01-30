@@ -78,7 +78,7 @@ package-gcc8:
       BUILD_PACKAGE: 'TRUE'
     artifacts:
       paths:
-        - package/
+        - build/package/
       expire_in: 1 week
 
 .build-clang:
