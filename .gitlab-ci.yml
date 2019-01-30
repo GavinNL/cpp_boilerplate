@@ -3,7 +3,7 @@ stages:
 - test
 - package
 
-windows job:
+windows_job:
   stage:
     - analysis
   tags:
