@@ -4,7 +4,7 @@ stages:
 - package
 
 windows_job:
-  stage: test
+  stage: analysis
   tags:
     - win7
   variables:
@@ -17,13 +17,14 @@ windows_job:
     - pip3 install conan
   script:
     - echo Hello, %USERNAME%!
+    - find $HOME
     - env
     - pwd
     - mkdir build && cd build
-    - conan install .. --build missing $CONAN_SETTINGS_FLAGS -D CPP_BOILERPLATE_BUILD_TESTS:BOOL=TRUE
-    - cmake .. $CMAKE_GENERATOR_FLAG
-    - cmake --build .
-    - ctest
+    - conan install .. --build missing $CONAN_SETTINGS_FLAGS
+    - cmake .. $CMAKE_GENERATOR_FLAG -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE
+    - cmake --build . --config $BUILD_CONFIG
+    - ctest -C $BUILD_CONFIG
 
 
 cppcheck:
