@@ -9,7 +9,7 @@ windows_job:
     - win7
   variables:
     CONAN_SETTINGS_FLAG: '-s compiler="Visual Studio" -s compiler.version=15 -s arch=x86_64 '
-    CMAKE_GENERATOR_FLAG: '-G "Visual Studio 15 2017 Win64" '
+    CMAKE_GENERATOR_FLAG: '-G "Visual Studio 15 2017 Win64"'
     ENABLE_COVERAGE: 'FALSE'
     ENABLE_TESTS: 'TRUE'
     BUILD_CONFIG: 'Release'
@@ -22,6 +22,7 @@ windows_job:
     - pwd
     - mkdir build && cd build
     - conan install .. --build missing $CONAN_SETTINGS_FLAGS
+    - echo cmake .. $CMAKE_GENERATOR_FLAG -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE
     - cmake .. $CMAKE_GENERATOR_FLAG -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE
     - cmake --build . --config $BUILD_CONFIG
     - ctest -C $BUILD_CONFIG
