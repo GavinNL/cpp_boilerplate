@@ -4,11 +4,27 @@ stages:
 - package
 
 windows_job:
-  stage: analysis
+  stage: build
   tags:
     - win7
+  env:
+    - CONAN_SETTINGS_FLAG="-s compiler=\"Visual Studio\" -s compiler.version=15 -s arch=x86_64 "
+    - CMAKE_GENERATOR_FLAG="-G \"Visual Studio 15 2017 Win64\" "
+    - ENABLE_COVERAGE=FALSE
+    - ENABLE_TESTS=TRUE
+    - BUILD_CONFIG=Release
+  before_script:
+    - pip3 install conan
   script:
     - echo Hello, %USERNAME%!
+    - env
+    - pwd
+    - mkdir build && cd build
+    - conan install .. --build missing $CONAN_SETTINGS_FLAGS -D CPP_BOILERPLATE_BUILD_TESTS:BOOL=TRUE
+    - cmake .. $CMAKE_GENERATOR_FLAG
+    - cmake --build .
+    - ctest
+
 
 cppcheck:
   image: ubuntu:bionic
@@ -26,14 +42,6 @@ cppcheck:
     paths:
       - cppcheck/
     expire_in: 1 week
-
-win_test:
-  image: Windows7_x64
-  stage: analysis
-  only: [tags]
-  script:
-    - echo Working...
-  tags: [win7]
 
 .build-gcc:
     image: lasote/conangcc7
