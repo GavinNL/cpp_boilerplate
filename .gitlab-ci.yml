@@ -8,8 +8,8 @@ windows_job:
   tags:
     - win7
   variables:
-    CONAN_SETTINGS_FLAG: '-s compiler=\"Visual Studio\" -s compiler.version=15 -s arch=x86_64 '
-    CMAKE_GENERATOR_FLAG: '-G \"Visual Studio 15 2017 Win64\" '
+    CONAN_SETTINGS_FLAG: '-s compiler="Visual Studio" -s compiler.version=15 -s arch=x86_64 '
+    CMAKE_GENERATOR_FLAG: '-G "Visual Studio 15 2017 Win64" '
     ENABLE_COVERAGE: 'FALSE'
     ENABLE_TESTS: 'TRUE'
     BUILD_CONFIG: 'Release'
