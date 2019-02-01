@@ -6,7 +6,7 @@ stages:
 windows_msvc2017:
   stage: analysis
   tags:
-    - win7
+    - msvc2017
   variables:
     CONAN_SETTINGS_COMPILER: 'Visual Studio'
     CONAN_SETTINGS_COMPILER_VERSION: '15'
@@ -35,7 +35,7 @@ windows_msvc2017:
 windows_mingw64:
   stage: analysis
   tags:
-    - win7
+    - mingw64
   variables:
     CONAN_SETTINGS_COMPILER: 'gcc'
     CONAN_SETTINGS_COMPILER_VERSION: '8.1'
