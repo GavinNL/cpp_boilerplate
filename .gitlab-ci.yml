@@ -3,8 +3,8 @@ stages:
 - test
 - package
 
-windows_job:
-  stage: test
+windows_msvc2017:
+  stage: analysis
   tags:
     - win7
   variables:
@@ -18,6 +18,8 @@ windows_job:
     ENABLE_COVERAGE: 'FALSE'
     ENABLE_TESTS: 'TRUE'
   before_script:
+    - choco install -y cmake
+    - choco install -y python3
     - pip3 install conan
     - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
   script:
@@ -30,6 +32,34 @@ windows_job:
     - cmake --build . --config $BUILD_CONFIG
     - ctest -C $BUILD_CONFIG
 
+windows_mingw64:
+  stage: analysis
+  tags:
+    - win7
+  variables:
+    CONAN_SETTINGS_COMPILER: 'gcc'
+    CONAN_SETTINGS_COMPILER_VERSION: '8.1'
+    CONAN_SETTINGS_ARCH: 'x86_64 '
+
+    CMAKE_GENERATOR: 'Unix Makefiles'
+    BUILD_CONFIG: 'Release'
+
+    ENABLE_COVERAGE: 'FALSE'
+    ENABLE_TESTS: 'TRUE'
+  before_script:
+    - choco install -y cmake
+    - choco install -y python3
+    - pip3 install conan
+    - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+  script:
+    - find $HOME
+    - env
+    - pwd
+    - mkdir build && cd build
+    - conan install .. --build missing -s compiler="$CONAN_SETTINGS_COMPILER" -s compiler.version=$CONAN_SETTINGS_COMPILER_VERSION -s arch=$CONAN_SETTINGS_ARCH
+    - cmake .. -G "$CMAKE_GENERATOR" -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE
+    - cmake --build . --config $BUILD_CONFIG
+    - ctest -C $BUILD_CONFIG
 
 cppcheck:
   image: ubuntu:bionic
