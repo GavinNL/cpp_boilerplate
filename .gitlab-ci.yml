@@ -20,6 +20,7 @@ windows_msvc2017:
   before_script:
     - choco install -y cmake
     - choco install -y python3
+    - export PATH="$PATH:/cygdrive/c/Python37:/cygdrive/c/Python37/Scripts/:/cygdrive/c/Program\ Files/CMake/bin"
     - pip3 install conan
     - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
   script:
@@ -49,6 +50,7 @@ windows_mingw64:
   before_script:
     - choco install -y cmake
     - choco install -y python3
+    - export PATH="$PATH:/cygdrive/c/Python37:/cygdrive/c/Python37/Scripts/:/cygdrive/c/Program\ Files/CMake/bin"
     - pip3 install conan
     - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
   script:
