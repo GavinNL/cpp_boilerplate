@@ -63,6 +63,9 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY "CPP_Boilerplate")
 FILE(GLOB TEXT_FILES  "*.yml"  )
 add_custom_target(ci_files    SOURCES ${TEXT_FILES} .travis/install.sh .travis/build.sh conanfile.txt)
 
+FILE(GLOB TEXT_FILES  "scripts/*"  )
+add_custom_target(scripts    SOURCES ${TEXT_FILES})
+
 
 FILE(GLOB README_FILES  "*.md" ".gitignore" )
 add_custom_target(readme    SOURCES ${README_FILES})
