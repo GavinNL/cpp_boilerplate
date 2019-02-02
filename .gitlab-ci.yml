@@ -4,6 +4,11 @@ stages:
 - package
 
 
+##======================================================================================================
+# The following step is the first stage in the pipeline. It should always pass. It's intent is to
+# Run CPP check on the code and then produce a html output to read.
+# The cpp_check output is saved as an artifact and automatically linked in the README.md file.
+##======================================================================================================
 cppcheck:
   image: ubuntu:bionic
   stage: analysis
@@ -20,7 +25,15 @@ cppcheck:
     paths:
       - cppcheck/
     expire_in: 1 week
+##======================================================================================================
 
+
+##======================================================================================================
+# The following section builds/tests the code on gcc and clang using docker images
+# The docker images that are used are built by Lasote who has developed images specifically for
+# testing Conan packages. These images contain the c++ compiler/cmake/conan
+#
+##======================================================================================================
 .build-gcc:
     image: lasote/conangcc7
     stage: test
@@ -50,7 +63,6 @@ cppcheck:
         - build/coverage/
       expire_in: 1 week
 
-
 build-gcc5:
     extends: .build-gcc
     image: lasote/conangcc5
@@ -66,20 +78,6 @@ build-gcc7:
 build-gcc8:
     extends: .build-gcc
     image: lasote/conangcc7
-
-package-gcc8:
-    extends: .build-gcc
-    stage: package
-    image: lasote/conangcc8
-    variables:
-      BUILD_CONFIG: 'Release'
-      BUILD_TESTS: 'False'
-      ENABLE_COVERAGE: 'FALSE'
-      BUILD_PACKAGE: 'TRUE'
-    artifacts:
-      paths:
-        - build/package/
-      expire_in: 1 week
 
 .build-clang:
     image: lasote/conanclang60
@@ -116,3 +114,96 @@ build-clang60:
     extends: .build-clang
     image: lasote/conanclang60
 
+
+
+
+##======================================================================================================
+# The following two sections were designed for a custom VirtualBox runner.
+# Two windows VMs were built with the following software installed.
+#
+#  Cygwin               - Needed by Gitlab-CI Runners
+#  Cygwin-OpenSSHServer - Needed by Gitlab-CI Runners
+#  Chocolaty            - Used for installing applications from the command line.
+#  Visual Studio 2017/Mingw64
+#
+# One VM was installed with Visual Studio 2017 and was given the tag: msvc2017
+# The other one was installed with Mingw64 8.1 and was given the tag: mingw64
+#
+##======================================================================================================
+.windows:
+  stage: test
+  variables:
+    CONAN_SETTINGS_COMPILER: 'Visual Studio'
+    CONAN_SETTINGS_COMPILER_VERSION: '15'
+    CONAN_SETTINGS_ARCH: 'x86_64 '
+
+    CMAKE_GENERATOR: 'Visual Studio 15 2017 Win64'
+    BUILD_CONFIG: 'Release'
+
+    ENABLE_COVERAGE: 'FALSE'
+    ENABLE_TESTS: 'TRUE'
+  before_script:
+    - choco install -y cmake.portable
+    - choco install -y python3
+    - export PATH="$PATH:/cygdrive/c/Python37:/cygdrive/c/Python37/Scripts"
+    - pip3 install conan
+    - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+  script:
+    - find $HOME
+    - env
+    - pwd
+    - mkdir build && cd build
+    - if [ -f ../conanfile.txt ]; then conan install .. --build missing -s compiler="$CONAN_SETTINGS_COMPILER" -s compiler.version=$CONAN_SETTINGS_COMPILER_VERSION -s arch=$CONAN_SETTINGS_ARCH; fi
+    - cmake .. -G "$CMAKE_GENERATOR" -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE
+    - cmake --build . --config $BUILD_CONFIG
+    - ctest -C $BUILD_CONFIG
+
+windows_msvc2017:
+  extends: .windows
+  tags:
+    - msvc2017
+  variables:
+    CONAN_SETTINGS_COMPILER: 'Visual Studio'
+    CONAN_SETTINGS_COMPILER_VERSION: '15'
+    CONAN_SETTINGS_ARCH: 'x86_64 '
+    CMAKE_GENERATOR: 'Visual Studio 15 2017 Win64'
+    ENABLE_COVERAGE: 'FALSE'
+    ENABLE_TESTS: 'TRUE'
+    BUILD_CONFIG: 'Release'
+
+windows_mingw64:
+  extends: .windows
+  tags:
+    - mingw64
+  variables:
+    CONAN_SETTINGS_COMPILER: 'gcc'
+    CONAN_SETTINGS_COMPILER_VERSION: '8.1'
+    CONAN_SETTINGS_ARCH: 'x86_64 '
+
+    CMAKE_GENERATOR: 'Unix Makefiles'
+    BUILD_CONFIG: 'Release'
+
+    ENABLE_COVERAGE: 'FALSE'
+    ENABLE_TESTS: 'TRUE'
+
+##======================================================================================================
+
+
+
+##======================================================================================================
+# This section will compile the C++ code in release mode and
+# then build a deb package using Cpack.
+##======================================================================================================
+package-gcc8:
+    extends: .build-gcc
+    stage: package
+    image: lasote/conangcc8
+    variables:
+      BUILD_CONFIG: 'Release'
+      BUILD_TESTS: 'False'
+      ENABLE_COVERAGE: 'FALSE'
+      BUILD_PACKAGE: 'TRUE'
+    artifacts:
+      paths:
+        - build/package/
+      expire_in: 1 week
