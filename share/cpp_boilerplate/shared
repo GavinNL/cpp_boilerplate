@@ -1,0 +1,6 @@
+This folder should contain all your external resources that your application would use.
+
+This folder will be installed to /usr/local/share/cpp_boilerplate.  
+
+Any other folders within the "shared" directory will also be installed.
+

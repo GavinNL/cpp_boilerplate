@@ -14,22 +14,57 @@
 
 cmake_minimum_required(VERSION 3.8)
 
-project(CPP_BOILERPLATE)
+project(cpp_boilerplate)
 
 #CPPBOILERPLATE
 set (CMAKE_CXX_STANDARD 11)
 
 
 option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
-
 option(CPPBOILERPLATE_ENABLE_COVERAGE "Enable Code Coverage flags" OFF)
 option(CPPBOILERPLATE_BUILD_TESTS "Build Tests" ON)
 
+
 #########################################################
-FILE(GLOB TEXT_FILES  "*.yml" )
+# Project defined settings. These values should be
+# edited by the user
+#########################################################
+
+set(CPPBOILERPLATE_MAJOR_VERSION 1)
+set(CPPBOILERPLATE_MINOR_VERSION 0)
+set(CPPBOILERPLATE_PATCH_VERSION 0)
+
+# Package information when building a .deb or .rpm package.
+set(CPACK_PACKAGE_DESCRIPTION "Hello library")
+set(CPACK_PACKAGE_VERSION_MAJOR "${CPPBOILERPLATE_MAJOR_VERSION}")
+set(CPACK_PACKAGE_VERSION_MINOR "${CPPBOILERPLATE_MINOR_VERSION}")
+set(CPACK_PACKAGE_VERSION_PATCH "${CPPBOILERPLATE_PATCH_VERSION}")
+set(CPACK_PACKAGE_VENDOR  "Gavin Wolf")
+set(CPACK_PACKAGE_CONTACT "gavin@wolf.com")
+
+set(CPACK_SET_DESTDIR true)
+set(CPACK_INSTALL_PREFIX "/usr/local")
+
+set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CPPBOILERPLATE_MAJOR_VERSION}.${CPPBOILERPLATE_MINOR_VERSION}.${CPPBOILERPLATE_PATCH_VERSION}")
+
+# Used by some CPack Package Generators like NSIS (windows)
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "CPP_Boilerplate")
+
+# When a deb file is created for your project, which other
+# debian packages does it depend on?
+#set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.3.1-6), libc6 (< 2.4)")
+#########################################################
+
+
+
+
+
+#########################################################
+FILE(GLOB TEXT_FILES  "*.yml"  )
 add_custom_target(ci_files    SOURCES ${TEXT_FILES} .travis/install.sh .travis/build.sh conanfile.txt)
 
-FILE(GLOB README_FILES  "*.md" )
+
+FILE(GLOB README_FILES  "*.md" ".gitignore" )
 add_custom_target(readme    SOURCES ${README_FILES})
 #########################################################
 
@@ -196,3 +231,20 @@ if( ${CPPBOILERPLATE_BUILD_TESTS})
     add_subdirectory(test)
 endif()
 #########################################################
+
+
+
+
+
+# Install ######################################################################
+
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/include DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/share
+        DESTINATION .
+        COMPONENT ResourcesCursors)
+
+# Package Generator  ###########################################################
+include(InstallRequiredSystemLibraries)
+include (CPack)
+

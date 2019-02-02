@@ -1,8 +1,14 @@
 stages:
 - analysis
 - test
+- package
 
 
+##======================================================================================================
+# The following step is the first stage in the pipeline. It should always pass. It's intent is to
+# Run CPP check on the code and then produce a html output to read.
+# The cpp_check output is saved as an artifact and automatically linked in the README.md file.
+##======================================================================================================
 cppcheck:
   image: ubuntu:bionic
   stage: analysis
@@ -19,36 +25,44 @@ cppcheck:
     paths:
       - cppcheck/
     expire_in: 1 week
+##======================================================================================================
 
+
+##======================================================================================================
+# The following section builds/tests the code on gcc and clang using docker images
+# The docker images that are used are built by Lasote who has developed images specifically for
+# testing Conan packages. These images contain the c++ compiler/cmake/conan
+#
+##======================================================================================================
 .build-gcc:
     image: lasote/conangcc7
     stage: test
+    variables:
+      BUILD_CONFIG: 'Debug'
+      BUILD_TESTS: 'TRUE'
+      ENABLE_COVERAGE: 'TRUE'
+      BUILD_PACKAGE: 'FALSE'
     before_script:
       - sudo apt update
       - sudo apt install -y curl
       - sudo pip install gcovr
       - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
     script:
+      - env
       - mkdir -p build && cd build
       #- conan install --build missing ..
       - if [ -f ../conanfile.txt ]; then conan install --build missing ..; fi
-      - cmake -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE ..
-      - cmake --build .
-      - ctest
-      - mkdir coverage
-      - mkdir coverage/html
-      #- gcovr . -r .. --html-details --html -o coverage/index.html -e ../test/third_party
-
-      - gcovr . -r .. --html-details --html -o coverage/html/index.html --exclude=../test/third_party/.* --exclude=../src/bin/.*
-      - gcovr . -r .. --html-details --html -o coverage/html/index.html --exclude=../test/third_party/.* --exclude=../src/bin/.*
-      - gcovr . -r .. --xml -o coverage/report.xml --exclude=../test/third_party/.* --exclude=../src/bin.*
-      - gcovr . -r .. --exclude=../test/third_party/.* --exclude=../src/bin/.* > coverage/report.txt
-      - bash ../.ci-scripts/generate_gcov_badge.sh coverage/report.txt coverage/badge.png
+      - cmake -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=$ENABLE_COVERAGE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=$BUILD_TESTS ..
+      - cmake --build . --config $BUILD_CONFIG
+      - if [[ "${BUILD_TESTS}" == "TRUE" ]]; then ctest; fi
+      - rm -rf coverage && mkdir coverage
+      - if [[ "${ENABLE_COVERAGE}" == "TRUE" ]]; then gcovr . -r .. --html-details --html -o coverage/index.html -e ../test/third_party; fi
+      - if [[ "${BUILD_PACKAGE}" == "TRUE" ]]; then cpack -G DEB; fi
+      - if [[ "${BUILD_PACKAGE}" == "TRUE" ]]; then (mkdir package && mv *.deb package) ; fi
     artifacts:
       paths:
         - build/coverage/
       expire_in: 1 week
-
 
 build-gcc5:
     extends: .build-gcc
@@ -62,7 +76,9 @@ build-gcc7:
     extends: .build-gcc
     image: lasote/conangcc7
 
-
+build-gcc8:
+    extends: .build-gcc
+    image: lasote/conangcc7
 
 .build-clang:
     image: lasote/conanclang60
@@ -99,3 +115,96 @@ build-clang60:
     extends: .build-clang
     image: lasote/conanclang60
 
+
+
+
+##======================================================================================================
+# The following two sections were designed for a custom VirtualBox runner.
+# Two windows VMs were built with the following software installed.
+#
+#  Cygwin               - Needed by Gitlab-CI Runners
+#  Cygwin-OpenSSHServer - Needed by Gitlab-CI Runners
+#  Chocolaty            - Used for installing applications from the command line.
+#  Visual Studio 2017/Mingw64
+#
+# One VM was installed with Visual Studio 2017 and was given the tag: msvc2017
+# The other one was installed with Mingw64 8.1 and was given the tag: mingw64
+#
+##======================================================================================================
+.windows:
+  stage: test
+  variables:
+    CONAN_SETTINGS_COMPILER: 'Visual Studio'
+    CONAN_SETTINGS_COMPILER_VERSION: '15'
+    CONAN_SETTINGS_ARCH: 'x86_64 '
+
+    CMAKE_GENERATOR: 'Visual Studio 15 2017 Win64'
+    BUILD_CONFIG: 'Release'
+
+    ENABLE_COVERAGE: 'FALSE'
+    ENABLE_TESTS: 'TRUE'
+  before_script:
+    - choco install -y cmake.portable
+    - choco install -y python3
+    - export PATH="$PATH:/cygdrive/c/Python37:/cygdrive/c/Python37/Scripts"
+    - pip3 install conan
+    - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+  script:
+    - find $HOME
+    - env
+    - pwd
+    - mkdir build && cd build
+    - if [ -f ../conanfile.txt ]; then conan install .. --build missing -s compiler="$CONAN_SETTINGS_COMPILER" -s compiler.version=$CONAN_SETTINGS_COMPILER_VERSION -s arch=$CONAN_SETTINGS_ARCH; fi
+    - cmake .. -G "$CMAKE_GENERATOR" -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE
+    - cmake --build . --config $BUILD_CONFIG
+    - ctest -C $BUILD_CONFIG
+
+windows_msvc2017:
+  extends: .windows
+  tags:
+    - msvc2017
+  variables:
+    CONAN_SETTINGS_COMPILER: 'Visual Studio'
+    CONAN_SETTINGS_COMPILER_VERSION: '15'
+    CONAN_SETTINGS_ARCH: 'x86_64 '
+    CMAKE_GENERATOR: 'Visual Studio 15 2017 Win64'
+    ENABLE_COVERAGE: 'FALSE'
+    ENABLE_TESTS: 'TRUE'
+    BUILD_CONFIG: 'Release'
+
+windows_mingw64:
+  extends: .windows
+  tags:
+    - mingw64
+  variables:
+    CONAN_SETTINGS_COMPILER: 'gcc'
+    CONAN_SETTINGS_COMPILER_VERSION: '8.1'
+    CONAN_SETTINGS_ARCH: 'x86_64 '
+
+    CMAKE_GENERATOR: 'Unix Makefiles'
+    BUILD_CONFIG: 'Release'
+
+    ENABLE_COVERAGE: 'FALSE'
+    ENABLE_TESTS: 'TRUE'
+
+##======================================================================================================
+
+
+
+##======================================================================================================
+# This section will compile the C++ code in release mode and
+# then build a deb package using Cpack.
+##======================================================================================================
+package-gcc8:
+    extends: .build-gcc
+    stage: package
+    image: lasote/conangcc8
+    variables:
+      BUILD_CONFIG: 'Release'
+      BUILD_TESTS: 'False'
+      ENABLE_COVERAGE: 'FALSE'
+      BUILD_PACKAGE: 'TRUE'
+    artifacts:
+      paths:
+        - build/package/
+      expire_in: 1 week

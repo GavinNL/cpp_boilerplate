@@ -24,6 +24,11 @@ FOREACH(subdir ${SUBDIRS})
         add_executable(${subdir} ${SRC_FILES})
         target_link_libraries( ${subdir} ${CPPBOILERPLATE_LIBS} ${CPPBOILERPLATE_COVERAGE_FLAGS})
 
+        install(TARGETS ${subdir}
+                RUNTIME DESTINATION bin
+                LIBRARY DESTINATION lib
+                ARCHIVE DESTINATION lib)
+
     endif()
 
 ENDFOREACH()

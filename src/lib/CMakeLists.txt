@@ -20,6 +20,11 @@ FOREACH(subdir ${SUBDIRS})
 
       add_library(${subdir} ${SRC_FILES})
 
+      install(TARGETS ${subdir}
+              RUNTIME DESTINATION bin
+              LIBRARY DESTINATION lib
+              ARCHIVE DESTINATION lib)
+
   endif()
 
 ENDFOREACH()
