@@ -3,10 +3,21 @@ stages:
 - test
 - package
 
-windows_msvc2017:
-  stage: analysis
-  tags:
-    - msvc2017
+##======================================================================================================
+# The following two sections were designed for a custom VirtualBox runner.
+# Two windows VMs were built with the following software installed.
+#
+#  Cygwin               - Needed by Gitlab-CI Runners
+#  Cygwin-OpenSSHServer - Needed by Gitlab-CI Runners
+#  Chocolaty            - Used for installing applications from the command line.
+#  Visual Studio 2017/Mingw64
+#
+# One VM was installed with Visual Studio 2017 and was given the tag: msvc2017
+# The other one was installed with Mingw64 8.1 and was given the tag: ming64
+#
+##======================================================================================================
+.windows:
+  stage: test
   variables:
     CONAN_SETTINGS_COMPILER: 'Visual Studio'
     CONAN_SETTINGS_COMPILER_VERSION: '15'
@@ -18,9 +29,9 @@ windows_msvc2017:
     ENABLE_COVERAGE: 'FALSE'
     ENABLE_TESTS: 'TRUE'
   before_script:
-    - choco install -y cmake
+    - choco install -y cmake.portable
     - choco install -y python3
-    - export PATH="$PATH:/cygdrive/c/Python37:/cygdrive/c/Python37/Scripts:/cygdrive/c/Program Files/CMake/bin"
+    - export PATH="$PATH:/cygdrive/c/Python37:/cygdrive/c/Python37/Scripts"
     - pip3 install conan
     - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
   script:
@@ -28,13 +39,26 @@ windows_msvc2017:
     - env
     - pwd
     - mkdir build && cd build
-    - conan install .. --build missing -s compiler="$CONAN_SETTINGS_COMPILER" -s compiler.version=$CONAN_SETTINGS_COMPILER_VERSION -s arch=$CONAN_SETTINGS_ARCH
+    - if [ -f ../conanfile.txt ]; conan install .. --build missing -s compiler="$CONAN_SETTINGS_COMPILER" -s compiler.version=$CONAN_SETTINGS_COMPILER_VERSION -s arch=$CONAN_SETTINGS_ARCH; fi
     - cmake .. -G "$CMAKE_GENERATOR" -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE
     - cmake --build . --config $BUILD_CONFIG
     - ctest -C $BUILD_CONFIG
 
+windows_msvc2017:
+  extends: .windows
+  tags:
+    - msvc2017
+  variables:
+    CONAN_SETTINGS_COMPILER: 'Visual Studio'
+    CONAN_SETTINGS_COMPILER_VERSION: '15'
+    CONAN_SETTINGS_ARCH: 'x86_64 '
+    CMAKE_GENERATOR: 'Visual Studio 15 2017 Win64'
+    ENABLE_COVERAGE: 'FALSE'
+    ENABLE_TESTS: 'TRUE'
+    BUILD_CONFIG: 'Release'
+
 windows_mingw64:
-  stage: analysis
+  extends: .windows
   tags:
     - mingw64
   variables:
@@ -47,21 +71,8 @@ windows_mingw64:
 
     ENABLE_COVERAGE: 'FALSE'
     ENABLE_TESTS: 'TRUE'
-  before_script:
-    - choco install -y cmake
-    - choco install -y python3
-    - export PATH="$PATH:/cygdrive/c/Python37:/cygdrive/c/Python37/Scripts:/cygdrive/c/Program Files/CMake/bin"
-    - pip3 install conan
-    - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
-  script:
-    - find $HOME
-    - env
-    - pwd
-    - mkdir build && cd build
-    - conan install .. --build missing -s compiler="$CONAN_SETTINGS_COMPILER" -s compiler.version=$CONAN_SETTINGS_COMPILER_VERSION -s arch=$CONAN_SETTINGS_ARCH
-    - cmake .. -G "$CMAKE_GENERATOR" -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE
-    - cmake --build . --config $BUILD_CONFIG
-    - ctest -C $BUILD_CONFIG
+
+##======================================================================================================
 
 cppcheck:
   image: ubuntu:bionic
