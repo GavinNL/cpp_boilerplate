@@ -3,6 +3,120 @@ stages:
 - test
 - package
 
+
+##======================================================================================================
+# The following step is the first stage in the pipeline. It should always pass. It's intent is to
+# Run CPP check on the code and then produce a html output to read.
+# The cpp_check output is saved as an artifact and automatically linked in the README.md file.
+##======================================================================================================
+cppcheck:
+  image: ubuntu:bionic
+  stage: analysis
+  before_script:
+    - apt update
+    - apt install -y --no-install-recommends cppcheck=1.82-1 python3-pygments python-pygments
+    - cppcheck --version
+  script:
+    - mkdir cppcheck
+    #- cppcheck . -I include/ --verbose --enable=all --inconclusive --language=c++ --error-exitcode=1
+    - cppcheck . -I include/ --enable=all --inconclusive --xml-version=2 --force --library=windows,posix,gnu . 2> cppcheck/result.xml
+    - cppcheck-htmlreport --source-encoding="iso8859-1" --title="my project name" --source-dir . --report-dir=cppcheck --file=cppcheck/result.xml
+  artifacts:
+    paths:
+      - cppcheck/
+    expire_in: 1 week
+##======================================================================================================
+
+
+##======================================================================================================
+# The following section builds/tests the code on gcc and clang using docker images
+# The docker images that are used are built by Lasote who has developed images specifically for
+# testing Conan packages. These images contain the c++ compiler/cmake/conan
+#
+##======================================================================================================
+.build-gcc:
+    image: lasote/conangcc7
+    stage: test
+    variables:
+      BUILD_CONFIG: 'Debug'
+      BUILD_TESTS: 'TRUE'
+      ENABLE_COVERAGE: 'TRUE'
+      BUILD_PACKAGE: 'FALSE'
+    before_script:
+      - sudo apt update
+      - sudo apt install gcovr
+      - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+    script:
+      - env
+      - mkdir -p build && cd build
+      #- conan install --build missing ..
+      - if [ -f ../conanfile.txt ]; then conan install --build missing ..; fi
+      - cmake -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=$ENABLE_COVERAGE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=$BUILD_TESTS ..
+      - cmake --build . --config $BUILD_CONFIG
+      - if [[ "${BUILD_TESTS}" == "TRUE" ]]; then ctest; fi
+      - rm -rf coverage && mkdir coverage
+      - if [[ "${ENABLE_COVERAGE}" == "TRUE" ]]; then gcovr . -r .. --html-details --html -o coverage/index.html -e ../test/third_party; fi
+      - if [[ "${BUILD_PACKAGE}" == "TRUE" ]]; then cpack -G DEB; fi
+      - if [[ "${BUILD_PACKAGE}" == "TRUE" ]]; then (mkdir package && mv *.deb package) ; fi
+    artifacts:
+      paths:
+        - build/coverage/
+      expire_in: 1 week
+
+build-gcc5:
+    extends: .build-gcc
+    image: lasote/conangcc5
+
+build-gcc6:
+    extends: .build-gcc
+    image: lasote/conangcc6
+
+build-gcc7:
+    extends: .build-gcc
+    image: lasote/conangcc7
+
+build-gcc8:
+    extends: .build-gcc
+    image: lasote/conangcc7
+
+.build-clang:
+    image: lasote/conanclang60
+    stage: test
+    before_script:
+      - sudo apt update
+      #- sudo apt install -y --no-install-recommends gcovr
+      - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+    script:
+      - mkdir -p build && cd build
+      #- conan install --build missing ..
+      - if [ -f ../conanfile.txt ]; then conan install --build missing ..; fi
+      - cmake -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE ..
+      - cmake --build .
+      - ctest
+
+build-clang38:
+    extends: .build-clang
+    image: lasote/conanclang38
+
+build-clang39:
+    extends: .build-clang
+    image: lasote/conanclang39
+
+build-clang40:
+    extends: .build-clang
+    image: lasote/conanclang40
+
+build-clang50:
+    extends: .build-clang
+    image: lasote/conanclang50
+
+build-clang60:
+    extends: .build-clang
+    image: lasote/conanclang60
+
+
+
+
 ##======================================================================================================
 # The following two sections were designed for a custom VirtualBox runner.
 # Two windows VMs were built with the following software installed.
@@ -13,7 +127,7 @@ stages:
 #  Visual Studio 2017/Mingw64
 #
 # One VM was installed with Visual Studio 2017 and was given the tag: msvc2017
-# The other one was installed with Mingw64 8.1 and was given the tag: ming64
+# The other one was installed with Mingw64 8.1 and was given the tag: mingw64
 #
 ##======================================================================================================
 .windows:
@@ -74,68 +188,12 @@ windows_mingw64:
 
 ##======================================================================================================
 
-cppcheck:
-  image: ubuntu:bionic
-  stage: analysis
-  before_script:
-    - apt update
-    - apt install -y --no-install-recommends cppcheck=1.82-1 python3-pygments python-pygments
-    - cppcheck --version
-  script:
-    - mkdir cppcheck
-    #- cppcheck . -I include/ --verbose --enable=all --inconclusive --language=c++ --error-exitcode=1
-    - cppcheck . -I include/ --enable=all --inconclusive --xml-version=2 --force --library=windows,posix,gnu . 2> cppcheck/result.xml
-    - cppcheck-htmlreport --source-encoding="iso8859-1" --title="my project name" --source-dir . --report-dir=cppcheck --file=cppcheck/result.xml
-  artifacts:
-    paths:
-      - cppcheck/
-    expire_in: 1 week
 
-.build-gcc:
-    image: lasote/conangcc7
-    stage: test
-    variables:
-      BUILD_CONFIG: 'Debug'
-      BUILD_TESTS: 'TRUE'
-      ENABLE_COVERAGE: 'TRUE'
-      BUILD_PACKAGE: 'FALSE'
-    before_script:
-      - sudo apt update
-      - sudo apt install gcovr
-      - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
-    script:
-      - env
-      - mkdir -p build && cd build
-      #- conan install --build missing ..
-      - if [ -f ../conanfile.txt ]; then conan install --build missing ..; fi
-      - cmake -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=$ENABLE_COVERAGE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=$BUILD_TESTS ..
-      - cmake --build . --config $BUILD_CONFIG
-      - if [[ "${BUILD_TESTS}" == "TRUE" ]]; then ctest; fi
-      - rm -rf coverage && mkdir coverage
-      - if [[ "${ENABLE_COVERAGE}" == "TRUE" ]]; then gcovr . -r .. --html-details --html -o coverage/index.html -e ../test/third_party; fi
-      - if [[ "${BUILD_PACKAGE}" == "TRUE" ]]; then cpack -G DEB; fi
-      - if [[ "${BUILD_PACKAGE}" == "TRUE" ]]; then (mkdir package && mv *.deb package) ; fi
-    artifacts:
-      paths:
-        - build/coverage/
-      expire_in: 1 week
 
-build-gcc5:
-    extends: .build-gcc
-    image: lasote/conangcc5
-
-build-gcc6:
-    extends: .build-gcc
-    image: lasote/conangcc6
-
-build-gcc7:
-    extends: .build-gcc
-    image: lasote/conangcc7
-
-build-gcc8:
-    extends: .build-gcc
-    image: lasote/conangcc7
-
+##======================================================================================================
+# This section will compile the C++ code in release mode and
+# then build a deb package using Cpack.
+##======================================================================================================
 package-gcc8:
     extends: .build-gcc
     stage: package
@@ -149,39 +207,3 @@ package-gcc8:
       paths:
         - build/package/
       expire_in: 1 week
-
-.build-clang:
-    image: lasote/conanclang60
-    stage: test
-    before_script:
-      - sudo apt update
-      #- sudo apt install -y --no-install-recommends gcovr
-      - conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
-    script:
-      - mkdir -p build && cd build
-      #- conan install --build missing ..
-      - if [ -f ../conanfile.txt ]; then conan install --build missing ..; fi
-      - cmake -D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE ..
-      - cmake --build .
-      - ctest
-
-build-clang38:
-    extends: .build-clang
-    image: lasote/conanclang38
-
-build-clang39:
-    extends: .build-clang
-    image: lasote/conanclang39
-
-build-clang40:
-    extends: .build-clang
-    image: lasote/conanclang40
-
-build-clang50:
-    extends: .build-clang
-    image: lasote/conanclang50
-
-build-clang60:
-    extends: .build-clang
-    image: lasote/conanclang60
-
