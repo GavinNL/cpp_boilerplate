@@ -172,8 +172,8 @@ script:
   - if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then export PATH=$PATH:/c/Program\ Files/Conan/conan; fi
   - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then export PATH=$PATH:/Users/travis/Library/Python/2.7/bin; fi
 
-  - if [[ "${ENABLE_COVERAGE}" == "TRUE" ]]; then export COVERAGE_FLAGS='-DGNL_ENABLE_COVERAGE:BOOL=TRUE'; fi
-  - if [[ "${ENABLE_TESTS}" == "TRUE" ]]; then export TEST_FLAGS='-DGNL_BUILD_TESTS:BOOL=TRUE'; fi
+  - if [[ "${ENABLE_COVERAGE}" == "TRUE" ]]; then export COVERAGE_FLAGS='-D CPPBOILERPLATE_ENABLE_COVERAGE:BOOL=TRUE'; fi
+  - if [[ "${ENABLE_TESTS}" == "TRUE" ]]; then export TEST_FLAGS='-D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE'; fi
 
   - if [[ "${USE_CONAN}" == "TRUE" ]]; then conan user; fi
   - if [[ "${USE_CONAN}" == "TRUE" ]]; then conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan; fi

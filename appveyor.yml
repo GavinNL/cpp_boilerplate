@@ -105,7 +105,7 @@ test_script:
 #
 #     conan install c:\projects\source --build -s arch=x86_64
 #
-#     cmake c:\projects\source -DCMAKE_CXX_FLAGS="%FLAGS%" -G "%GENERATOR%" -DCPPBOILERPLATE_USE_CONAN:BOOL=TRUE
+#     cmake c:\projects\source -DCMAKE_CXX_FLAGS="%FLAGS%" -G "%GENERATOR%" -D CPPBOILERPLATE_USE_CONAN:BOOL=TRUE
 #
 #     cmake --build . --config "Debug"
 #
