@@ -25,6 +25,6 @@ if [ -f "../conanfile.txt" ]; then
 conan install .. --build missing -s compiler="$CONAN_SETTINGS_COMPILER" -s compiler.version=$CONAN_SETTINGS_COMPILER_VERSION -s arch=$CONAN_SETTINGS_ARCH
 fi
 
-cmake -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE -G "$CMAKE_GENERATOR" ..
+cmake -D BUILD_SHARED_LIBS:BOOL=TRUE -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE -G "$CMAKE_GENERATOR"  ..
 cmake --build . --config $BUILD_CONFIG
 

@@ -15,13 +15,14 @@ FOREACH(subdir ${SUBDIRS})
 
     else()
 
-        MESSAGE("Compiling Module ${subdir} into executable" )
+        MESSAGE("Compiling Module ${subdir} into executable. Libs: ${CPPBOILERPLATE_LIBS} " )
 
         include_directories( ${CPPBOILERPLATE_INCLUDE} )
 
         FILE(GLOB_RECURSE  SRC_FILES  "${subdir}/*.cpp" )
 
         add_executable(${subdir} ${SRC_FILES})
+
         target_link_libraries( ${subdir} ${CPPBOILERPLATE_LIBS} ${CPPBOILERPLATE_COVERAGE_FLAGS})
 
         install(TARGETS ${subdir}

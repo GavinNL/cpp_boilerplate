@@ -42,13 +42,13 @@ set(CPACK_PACKAGE_VERSION_PATCH "${CPPBOILERPLATE_PATCH_VERSION}")
 set(CPACK_PACKAGE_VENDOR  "Gavin Wolf")
 set(CPACK_PACKAGE_CONTACT "gavin@wolf.com")
 
-set(CPACK_SET_DESTDIR true)
-set(CPACK_INSTALL_PREFIX "/usr/local")
+#set(CPACK_SET_DESTDIR true)
+#set(CPACK_INSTALL_PREFIX "/usr/local")
 
 set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CPPBOILERPLATE_MAJOR_VERSION}.${CPPBOILERPLATE_MINOR_VERSION}.${CPPBOILERPLATE_PATCH_VERSION}")
 
 # Used by some CPack Package Generators like NSIS (windows)
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "CPP_Boilerplate")
+#set(CPACK_PACKAGE_INSTALL_DIRECTORY "CPP_Boilerplate")
 
 # When a deb file is created for your project, which other
 # debian packages does it depend on?
@@ -80,7 +80,7 @@ add_library(project_warnings INTERFACE)
 set(CPPBOILERPLATE_INCLUDE ${PROJECT_SOURCE_DIR}/include)
 #########################################################
 
-
+message(" Checking for existance of ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
 if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
     set(CONAN_SYSTEM_INCLUDES ON)
@@ -99,7 +99,7 @@ endif()
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
-
+include_directories( ${PROJECT_BINARY_DIR} )
 #########################################################
 # If we hhave enabled coverage, make sure to add the
 # specific flags required to calculate the coverage
@@ -241,11 +241,12 @@ endif()
 
 # Install ######################################################################
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/include DESTINATION ${CMAKE_INSTALL_PREFIX})
-
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/share
-        DESTINATION .
-        COMPONENT ResourcesCursors)
+# install(DIRECTORY ./include DESTINATION ${CMAKE_INSTALL_PREFIX})
+ install(DIRECTORY ./include DESTINATION .)
+#
+# install(DIRECTORY ./share
+#         DESTINATION .
+#         COMPONENT ResourcesCursors)
 
 # Package Generator  ###########################################################
 include(InstallRequiredSystemLibraries)

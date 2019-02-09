@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.8)
 
+
+include (GenerateExportHeader)
+
 SUBDIRLIST(SUBDIRS ${CMAKE_CURRENT_SOURCE_DIR})
 
 MESSAGE("\n\n")
@@ -19,6 +22,12 @@ FOREACH(subdir ${SUBDIRS})
       FILE(GLOB_RECURSE  SRC_FILES  "${subdir}/*.cpp" )
 
       add_library(${subdir} ${SRC_FILES})
+
+      GENERATE_EXPORT_HEADER(${subdir}           # generates the export header shared_EXPORTS.h automatically
+          BASE_NAME ${subdir}
+          EXPORT_MACRO_NAME ${subdir}_EXPORTS
+          EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/${subdir}_EXPORTS.h
+          STATIC_DEFINE SHARED_EXPORTS_BUILT_AS_STATIC)
 
       install(TARGETS ${subdir}
               RUNTIME DESTINATION bin
