@@ -166,6 +166,7 @@ build-clang60:
     - pwd
     - mkdir build && cd build
     - if [ -f ../conanfile.txt ]; then conan install .. --build missing -s compiler="$CONAN_SETTINGS_COMPILER" -s compiler.version=$CONAN_SETTINGS_COMPILER_VERSION -s arch=$CONAN_SETTINGS_ARCH; fi
+    - echo cmake -G "$CMAKE_GENERATOR" -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE -D BUILD_SHARED_LIBS:BOOL=$BUILD_SHARED  ..
     - cmake -G "$CMAKE_GENERATOR" -D CPPBOILERPLATE_BUILD_TESTS:BOOL=TRUE -D BUILD_SHARED_LIBS:BOOL=$BUILD_SHARED  ..
     - cmake --build . --config $BUILD_CONFIG
     - ctest -C $BUILD_CONFIG

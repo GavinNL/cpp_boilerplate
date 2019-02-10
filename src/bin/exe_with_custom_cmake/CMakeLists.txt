@@ -26,13 +26,6 @@ include_directories( ${CPPBOILERPLATE_INCLUDE} )
 target_link_libraries( ${exe_name} ${CPPBOILERPLATE_LIBS} ${CPPBOILERPLATE_COVERAGE_FLAGS}  )
 # ==============================================================
 
-# If this is a shared library and we're on windows, we need to have the
-# exe_name_DEFINE_EXPORTS defined so that the symbols can be exported
-if(${BUILD_SHARED_LIBS})
-  target_compile_definitions( ${exe_name} PRIVATE -D${exe_name_cap}_DEFINE_EXPORTS )
-endif()
-
-
 # The install targets that will be created when we type "make install"
 install(TARGETS ${exe_name}
       RUNTIME DESTINATION bin
