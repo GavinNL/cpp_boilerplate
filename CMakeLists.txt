@@ -244,9 +244,9 @@ endif()
 # install(DIRECTORY ./include DESTINATION ${CMAKE_INSTALL_PREFIX})
  install(DIRECTORY ./include DESTINATION .)
 #
-# install(DIRECTORY ./share
-#         DESTINATION .
-#         COMPONENT ResourcesCursors)
+install(DIRECTORY ./share
+        DESTINATION .
+        COMPONENT ResourcesCursors)
 
 # Package Generator  ###########################################################
 include(InstallRequiredSystemLibraries)

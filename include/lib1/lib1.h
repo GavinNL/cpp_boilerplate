@@ -2,12 +2,12 @@
 #ifndef LIB1_HEADER_H
 #define LIB1_HEADER_H
 
-#include "lib1_EXPORTS.h"
+#include "lib1_exports.h"
 
 namespace lib1
 {
 
-int lib1_EXPORTS foo(int y);
+int LIB1_SHARED_EXPORT foo(int y);
 
 }
 #endif
